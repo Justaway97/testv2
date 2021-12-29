@@ -1,0 +1,12 @@
+version: '3'
+services:
+  myapp:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=36d562c30e13661561ea6dfd42c89a5ca4f7b110859a25947abd886add43696b
+      - POSTGRES_USER=sdwsuduqefyyts
+      - POSTGRES_DB=dfmc4979vc542c
+    volumes:
+      - ./docker-data/postgres:/var/lib/postgresql/data
