@@ -1,0 +1,46 @@
+.eighty-five-width {
+    width: 85%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    flex: 1;
+}
+
+.img {
+    height: 40%;
+}
+
+.marginLeftRight {
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+// .card {
+//     height:100%;
+// }
+
+.main-div{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    width: 90%;
+}
+
+form {
+    justify-content: center;
+    align-items: center;
+}
