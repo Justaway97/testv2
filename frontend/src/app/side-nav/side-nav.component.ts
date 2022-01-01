@@ -12,7 +12,7 @@ export class SideNavComponent implements OnInit {
 
   @Output() toggleSideNav = new EventEmitter();
   data: any[];
-  @Input() userId: string | null;
+  @Input() username: string | null;
   searchCriteria: any;
   constructor(
     private appService: AppService,
@@ -29,7 +29,7 @@ export class SideNavComponent implements OnInit {
   }
 
   getOrderBySearchCriteria() {
-    this.appService.getOrderStatistic(this.userId).subscribe((data: any) => {
+    this.appService.getOrderStatistic(this.username).subscribe((data: any) => {
       this.data = data.values;
     }, error => {
       const dialogRef = this.dialog.open(DialogComponent, {

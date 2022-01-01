@@ -10,7 +10,7 @@
                 (displayWarehouseButton)="goToWarehouse($event)"></app-tool-bar>
   <div style="display:flex;height:100%;">
   <app-side-nav style="width:12%"
-                [userId]="userId"></app-side-nav>
+                [username]="username"></app-side-nav>
   <mat-drawer-container [hasBackdrop]="true" autosize (backdropClick)="closeRightSideNav()" style="width:100%">
       <div>
         <app-tool-bar colourSelection="primary"

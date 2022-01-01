@@ -1,4 +1,5 @@
 import json
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
@@ -8,7 +9,7 @@ from django.contrib.auth import login, logout, authenticate
 import base64
 from PIL import Image
 from io import BytesIO
-from order.models import Item, MessageTable, Order, Outlet, User, DatabaseLock, Warehouse
+from order.models import Item, MessageTable, Order, Outlet, DatabaseLock, Warehouse
 from datetime import timezone
 import os
 from django.db.models import Q
@@ -109,7 +110,7 @@ def user_login(request):
     user = authenticate(username=username, password=password)
     if user:
         login(request, user)
-        return JsonResponse({}, status=200)
+        return JsonResponse({'username': username}, status=200)
     return generate_error_response('Invalid username/password', status=401)
 
 
@@ -296,19 +297,6 @@ def serialize_order(order):
         'order_completed': order.order_completed,
         'remark': order.remark,
         # 'warehouse_id': order.warehouse_id,
-    }
-    return res
-
-def serialize_user(user):
-    # serialize list of user
-    res = {
-        'user_id': user.pk,
-        'username': user.username,
-        'role': user.role,
-        'handphone_number': user.handphone_number,
-        'full_name': user.full_name,
-        'approve_by': user.approve_by,
-        'approve_date': user.approve_date,
     }
     return res
 

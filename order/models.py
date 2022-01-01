@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 import uuid
 
@@ -54,37 +55,6 @@ class Item(models.Model):
 
     def __str__(self):
         return self.item_name
-
-class User(models.Model):
-    username = models.CharField(max_length=200, unique=True)
-    password = models.CharField(max_length=50)
-    role = models.CharField(max_length=50)
-    handphone_number = models.CharField(max_length=50)
-    full_name = models.CharField(max_length=200)
-    approve_by = models.CharField(max_length=200, null=True)
-    approve_date = models.DateField(null=True)
-    # facourite_outlet = models.ForeignKey(Outlet)
-    # status
-
-    def updateState(self, data):
-        if 'username' in data:
-            self.username = data['username']
-        if 'password' in data:
-            self.password = data['password']
-        if 'role' in data:
-            self.role = data['role']
-        if 'handphone_number' in data:
-            self.handphone_number = data['handphone_number']
-        if 'full_name' in data:
-            self.full_name = data['full_name']
-        if 'approve_by' in data:
-            self.approve_by = data['approve_by']
-        if 'approve_date' in data:
-            self.approve_date = data['approve_date']
-        super().save()
-
-    def __str__(self):
-        return self.username
 
 class Order(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4) change all to uuid for security issue songming

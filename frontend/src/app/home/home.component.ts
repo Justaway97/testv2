@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
   isUpdateAction = false;
   searchCriteria: any;
   currentTable: string;
-  userId: string | null;
+  username: string | null;
   approvalCheckBoxButtonList: any[];
   tableSize: number;
   title: string = 'Item';
@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.access = localStorage.getItem('access');
-    this.userId = localStorage.getItem('id');
+    this.username = localStorage.getItem('id');
     this.searchCriteria = {
       pageIndex: this.dataService.PAGE_INDEX,
       pageSize: this.dataService.PAGE_SIZE,
