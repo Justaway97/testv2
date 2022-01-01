@@ -1,9 +1,8 @@
 from django.contrib import admin
 
-from order.models import DatabaseLock, Item, MessageTable, Order, Outlet, Token, User, Warehouse
+from order.models import DatabaseLock, Item, MessageTable, Order, Outlet, Token, Warehouse
 
 # Register your models here.
-admin.site.register(User)
 admin.site.register(Item)
 admin.site.register(Outlet)
 admin.site.register(Order)
