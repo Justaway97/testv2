@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: Url.getApprovalURL(), component: HomeComponent },
   { path: Url.getOrderWarehouseURL(), component: HomeComponent },
   { path: Url.getWarehouseURL(), component: HomeComponent },
-  { path: '*', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
