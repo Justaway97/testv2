@@ -1,0 +1,25 @@
+<form [formGroup]="warehouseForm" novalidate style="height: 100%;" enctype="multipart/form-data">
+    <mat-card class="card">
+        <mat-card-title class="col">Add New Outlet</mat-card-title>
+        <mat-card-content style="display:inline;">
+            <div class="row">
+                <div class="col marginLeftRight">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Warehouse Name" [value]="warehouseForm.getRawValue()?.warehouse_name" formControlName="warehouse_name">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col marginLeftRight">
+                    <mat-form-field class="full-width">
+                        <textarea matInput placeholder="Warehouse Address" [value]="warehouseForm.getRawValue()?.warehouse_address" formControlName="warehouse_address"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions class="col marginLeftRight">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!warehouseForm.dirty" (click)="submit()">Submit</button>
+          <button mat-raised-button color="warn" type="submit" (click)="reset()">Reset</button>
+        </mat-card-actions>
+    </mat-card>
+</form>

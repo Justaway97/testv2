@@ -1,0 +1,25 @@
+<form [formGroup]="outletDetailForm" novalidate style="height: 100%;" enctype="multipart/form-data">
+    <mat-card class="card">
+        <mat-card-title class="col">Add New Outlet</mat-card-title>
+        <mat-card-content style="display:inline;">
+            <div class="row">
+                <div class="col marginLeftRight">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Outlet Name" [value]="outletDetailForm.getRawValue()?.outlet_name" formControlName="outlet_name">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col marginLeftRight">
+                    <mat-form-field class="full-width">
+                        <textarea matInput placeholder="Outlet Address" [value]="outletDetailForm.getRawValue()?.outlet_address" formControlName="outlet_address"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions class="col marginLeftRight">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!outletDetailForm.dirty" (click)="submit()">Submit</button>
+          <button mat-raised-button color="warn" type="submit" (click)="reset()">Reset</button>
+        </mat-card-actions>
+    </mat-card>
+</form>

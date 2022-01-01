@@ -1,0 +1,84 @@
+<!-- will do like select the button to be display,
+  will seperate them into one template each -->
+<ng-container *ngIf="isDataLoaded">
+  <ng-container *ngIf="flag">
+    <mat-toolbar color="primary" class="secondary">
+      <div style="display:flex;align-items: center;width:100%;">
+        <span>{{ title }}</span>
+        <div class="example-spacer">
+          <ng-template [ngTemplateOutlet]="addItem"></ng-template>
+        </div>
+      </div>
+    </mat-toolbar>
+  </ng-container>
+  <ng-container *ngIf="!flag">
+    <mat-toolbar color="warn" class="main">
+      <div style="display:flex;align-items: center;width:100%;">
+        <ng-template [ngTemplateOutlet]="home"></ng-template>
+        <ng-template [ngTemplateOutlet]="item"></ng-template>
+        <ng-template [ngTemplateOutlet]="outlet"></ng-template>
+        <ng-template [ngTemplateOutlet]="userApproval"></ng-template>
+        <ng-template [ngTemplateOutlet]="order"></ng-template>
+        <ng-template [ngTemplateOutlet]="orderWarehouse"></ng-template>
+        <ng-template [ngTemplateOutlet]="warehouse"></ng-template>
+        <div class="example-spacer">
+          <ng-template [ngTemplateOutlet]="logout"></ng-template>
+        </div>
+      </div>
+    </mat-toolbar>
+  </ng-container>
+<!-- order icon -->
+  <ng-template #order>
+    <div>
+      <button mat-button (click)="goToOrder()">Order</button>
+    </div>
+  </ng-template>
+<!-- main icon -->
+  <ng-template #home >
+    <div>
+      <button mat-button (click)="goToHome()">Home</button>
+    </div>
+  </ng-template>
+<!-- main icon -->
+  <ng-template #item >
+    <div>
+      <button mat-button (click)="goToHome()">Item</button>
+    </div>
+  </ng-template>
+<!-- main icon -->
+  <ng-template #outlet >
+    <div>
+      <button mat-button (click)="goToOutlet()">Outlet</button>
+    </div>
+  </ng-template>
+<!-- add item icon -->
+  <ng-template #addItem >
+    <div>
+      <button mat-button color="white" (click)="goToAdd()">Add Item</button>
+    </div>
+  </ng-template>
+<!-- add item icon -->
+  <ng-template #userApproval >
+    <div>
+      <button mat-button color="white" (click)="goToUserApproval()">User Approval</button>
+    </div>
+  </ng-template>
+<!-- add item icon -->
+  <ng-template #orderWarehouse >
+    <div>
+      <button mat-button color="white" (click)="goToOrderWarehouse()">Order</button>
+    </div>
+  </ng-template>
+<!-- add item icon -->
+  <ng-template #warehouse >
+    <div>
+      <button mat-button color="white" (click)="goToWarehouse()">Warehouse</button>
+    </div>
+  </ng-template>
+<!-- add item icon -->
+  <ng-template #logout >
+    <div>
+      <button mat-button color="white" (click)="logOut()">Log Out</button>
+    </div>
+  </ng-template>
+</ng-container>

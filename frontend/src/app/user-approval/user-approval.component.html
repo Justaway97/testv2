@@ -1,0 +1,35 @@
+<form [formGroup]="approvalUserForm" novalidate style="height: 100%;" enctype="multipart/form-data">
+    <mat-card class="card">
+        <mat-card-title class="col">Add New Item</mat-card-title>
+        <mat-card-content>
+            <div class="row">
+                <div class="col marginLeftRight">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Username" [value]="approvalUserForm.getRawValue()?.username" formControlName="username">
+                    </mat-form-field>
+                </div>
+                <div class="col marginLeftRight">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Full Name" [value]="approvalUserForm.getRawValue()?.full_name" formControlName="full_name">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col marginLeftRight">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Role" [value]="approvalUserForm.getRawValue()?.role" formControlName="role">
+                    </mat-form-field>
+                </div>
+                <div class="col marginLeftRight">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Handphone Number" [value]="approvalUserForm.getRawValue()?.handphone_number" formControlName="handphone_number">
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions class="col marginLeftRight">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!approvalUserForm.dirty" (click)="submit()">Submit</button>
+          <button mat-raised-button color="warn" type="submit" (click)="reset()">Reset</button>
+        </mat-card-actions>
+    </mat-card>
+</form>

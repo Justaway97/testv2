@@ -1,0 +1,47 @@
+.example-spacer {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: right;
+    height: inherit;
+  }
+  
+// .secondary {
+//   min-height: 5rem;
+// }
+.add-new {
+  height: 80%;
+  align-self: center;
+}
+
+// ::ng-deep .mat-form-field-underline {
+//   display: none;
+// }
+
+// // mat-label normal state style
+// .customize {
+//   color: rgba(0,0,0,.6)!important;
+//   // color: $mainColor!important;
+// }
+mat-autocomplete {
+  color: white;
+}
+
+:host ::ng-deep .mat-raised-button span.mat-button-wrapper {
+  font-weight: bold;
+}
+
+:host ::ng-deep .mat-button span.mat-button-wrapper {
+  font-weight: bold;
+}
+// .main {
+//   display:flex;
+//   position: fixed;
+//   justify-content: space-between;
+// }
+
+.main {
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+}

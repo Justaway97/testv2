@@ -1,1 +1,57 @@
-<p>success</p>
+
+<!-- <ng-container *ngIf="isDataLoaded"> -->
+    <div class="main-div">
+        <mat-card class="card">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+            <ng-container *ngIf="isRegister">
+                <mat-card-title class="col">Register</mat-card-title>
+                <mat-card-content style="display:inline;">
+                    <div class="row">
+                    <div class="col marginLeftRight">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Username" [value]="loginForm.getRawValue()?.username" formControlName="username">
+                        </mat-form-field>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col marginLeftRight">
+                        <mat-form-field class="full-width">
+                        <input matInput placeholder="Password" [value]="loginForm.getRawValue()?.password" formControlName="password">
+                        </mat-form-field>
+                    </div>
+                    </div>
+                </mat-card-content>
+            </ng-container>
+            <ng-container *ngIf="!isRegister">
+                <mat-card-title class="col">Login</mat-card-title>
+                <mat-card-content style="display:inline;">
+                    <div class="row">
+                    <div class="col marginLeftRight">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Username" [value]="loginForm.getRawValue()?.username" formControlName="username">
+                        </mat-form-field>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col marginLeftRight">
+                        <mat-form-field class="full-width">
+                        <input matInput placeholder="Password" [value]="loginForm.getRawValue()?.password" formControlName="password">
+                        </mat-form-field>
+                    </div>
+                    </div>
+                </mat-card-content>
+            </ng-container>
+            <mat-card-actions class="col marginLeftRight">
+                <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.dirty" (click)="onSubmit()">Submit</button>
+                <button mat-raised-button color="warn" type="submit" (click)="reset()">Reset</button>
+            </mat-card-actions>
+        </form>
+        </mat-card>
+        <div *ngIf="isRegister">
+            <button mat-raised-button color="warn" type="submit" (click)="goToLogin()">go to login</button>
+        </div>
+        <div *ngIf="!isRegister">
+            <button mat-raised-button color="warn" type="submit" (click)="goToRegister()">go to register</button>
+        </div>
+    </div>
+<!-- </ng-container> -->

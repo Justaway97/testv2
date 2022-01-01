@@ -1,0 +1,18 @@
+
+
+:host ::ng-deep .filter-field div.mat-form-field-wrapper{
+    padding-bottom: 0 !important;
+  }
+
+table {
+    width: 100%;
+}
+
+.quantity {
+    width:70%;
+}
+
+td {
+    min-width:4% !important;
+    max-width:10% !important;
+}
