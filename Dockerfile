@@ -10,7 +10,7 @@ RUN set -ex \
     && apk add --virtual build-essential gcc python3-dev musl-dev \
     && apk add postgresql-dev \
     && pip install psycopg2 \
-    && pip install Pillow \
+    && pip install --upgrade Pillow \
     && pip install --no-cache-dir -r /app/requirements.txt
 
 # copy source to destination (in the docker container)
