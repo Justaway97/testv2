@@ -1,6 +1,13 @@
 <form [formGroup]="itemDetailForm" novalidate style="height: 100%;" enctype="multipart/form-data">
     <mat-card class="card">
-        <mat-card-title class="col">Add New Item</mat-card-title>
+        <div class="row">
+            <mat-card-title class="col">Add New Item</mat-card-title>
+            <div class="test-card">
+                <mat-card-title class="col">
+                    <mat-icon class="close" (click)="toggleSideNav.emit()">close</mat-icon>
+                </mat-card-title>
+            </div>
+        </div>
         <mat-card-content style="display:inline;">
             <div class="img marginLeftRight">
                 <mat-card class="fullHeight">
