@@ -172,8 +172,7 @@ export class AppService {
 
     userApproval(value: any) {
         return this.http.post(
-            AppService.URL_HOME.concat(AppService.URL_APPROVAL)
-                               .concat(AppService.URL_USER),
+            AppService.URL_HOME.concat(AppService.URL_USER),
             value,
             {
                 withCredentials: true

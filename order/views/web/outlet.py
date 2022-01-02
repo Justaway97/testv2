@@ -1,4 +1,5 @@
 
+import json
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
@@ -8,7 +9,7 @@ from order.views.web.shared import generate_error_response
 
 def isOutletExist(data, outlet_id = 0):
     if outlet_id != 0:
-        outlet = Outlet.objects.filter(outlet_name=data['outlet_name']).filter(~Q(id=outlet_id)).count()
+        outlet = Outlet.objects.filter(outlet_name=data['outlet_name']).filter(id=outlet_id).count()
     else:
         outlet = Outlet.objects.filter(outlet_name=data['outlet_name']).count()
     if outlet:

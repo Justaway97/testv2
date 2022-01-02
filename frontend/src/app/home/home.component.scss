@@ -8,7 +8,8 @@ mat-drawer-container {
 }
 
 .example-sidenav-right {
-    // width: 40%;
+    max-width: 400px;
+    min-width: 400px;
     background-color: #f4f4f4;
 }
 

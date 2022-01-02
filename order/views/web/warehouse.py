@@ -1,7 +1,10 @@
 
+import json
 from django.http.response import JsonResponse
-from django.views.decorators.http import require_GET
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_http_methods
 from order.models import Warehouse
+from order.views.web.shared import generate_error_response
 
 
 def serialize_warehouse(warehouse):
@@ -24,3 +27,30 @@ def getWarehouseList(request):
 def getOptionWarehouseList(request):
     warehouses = Warehouse.objects.all()
     return JsonResponse({'values': [{'id':x.id , 'warehouse_name':x.warehouse_name} for x in warehouses]}, status=200)
+
+@csrf_exempt
+@require_http_methods(['GET', 'POST', 'DELETE'])
+def manageWarehouse(request, warehouse_id):
+    # find, update and delete action
+    targetWarehouse = Warehouse.objects.get(id=warehouse_id)
+    if request.method == 'GET':
+        if targetWarehouse:
+            return JsonResponse({'values': serialize_warehouse(targetWarehouse)}, status=200)
+        return generate_error_response('Item not found!', status=404)
+    if request.method == 'POST':
+        if isWarehouseExist(serialize_warehouse(targetWarehouse), warehouse_id):
+            return generate_error_response('You cannot have two warehouse with same name', status=409)
+        if targetWarehouse is None:
+            return generate_error_response('warehouse not found!', status=404)
+        targetWarehouse.updateState(json.loads(request.body))
+        return JsonResponse({}, status=200)
+    return generate_error_response({}, status=405)
+
+def isWarehouseExist(data, warehouse_id = 0):
+    if warehouse_id != 0:
+        warehouse = Warehouse.objects.filter(warehouse_name=data['warehouse_name']).filter(id=warehouse_id).count()
+    else:
+        warehouse = Warehouse.objects.filter(warehouse_name=data['warehouse_name']).count()
+    if warehouse:
+        return True
+    return False

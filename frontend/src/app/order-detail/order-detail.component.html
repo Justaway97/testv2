@@ -1,7 +1,14 @@
 <ng-container *ngIf="isDataLoaded">
-  <form [formGroup]="orderForm" novalidate>
-      <mat-card>
-          <mat-card-title class="col">{{ getTitle() }}</mat-card-title>
+  <form [formGroup]="orderForm" novalidate style="height: 100%;">
+    <mat-card class="card">
+          <div class="row">
+            <mat-card-title class="col">{{ getTitle() }}</mat-card-title>
+            <div class="test-card">
+              <mat-card-title class="col">
+                <mat-icon class="close" (click)="toggleSideNav.emit()">close</mat-icon>
+              </mat-card-title>
+            </div>
+          </div>
           <mat-card-content>
           <div class="row">
             <div class="col">
@@ -21,6 +28,8 @@
                 <input matInput placeholder="Quantity" [value]="orderForm.getRawValue()?.quantity" formControlName="quantity">
               </mat-form-field>
             </div>
+          </div>
+          <div class="row">
             <div class="col">
               <mat-form-field class="full-width">
                 <input matInput placeholder="Package" [value]="orderForm.getRawValue()?.package" formControlName="package">
@@ -36,6 +45,8 @@
                 <mat-datepicker #pickerOrderDate></mat-datepicker>
               </mat-form-field>
             </div>
+          </div>
+          <div class="row">
             <div class="col" *ngIf="selectedRow">
               <mat-form-field class="full-width">
                 <input matInput placeholder="Order By" [value]="orderForm.getRawValue()?.order_by" formControlName="order_by">
@@ -51,6 +62,8 @@
                 <mat-datepicker #pickerTargetReceivedDate></mat-datepicker>
               </mat-form-field>
             </div>
+          </div>
+          <div class="row">
             <div class="col" *ngIf="selectedRow">
               <mat-form-field class="full-width">
                 <input matInput placeholder="Delay (Day)" [value]="orderForm.getRawValue()?.delay_day" formControlName="delay_day">
@@ -68,6 +81,8 @@
                 </mat-select>
               </mat-form-field>
             </div>
+          </div>
+          <div class="row">
             <div class="col">
               <mat-form-field class="full-width">
                 <mat-label>Warehouse</mat-label>
@@ -92,8 +107,6 @@
                 <mat-datepicker-toggle matSuffix [for]="pickerArrivedDate"></mat-datepicker-toggle>
                 <mat-datepicker #pickerArrivedDate></mat-datepicker>
               </mat-form-field>
-            </div>
-            <div class="col" *ngIf="selectedRow">
               <mat-radio-group class="button-group" formControlName="order_completed">
                 <mat-label class="radio-label">Completed?      </mat-label>
                 <mat-radio-button class="button-radio" value="Y">Yes</mat-radio-button>

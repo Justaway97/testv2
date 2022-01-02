@@ -9,7 +9,6 @@ from django.contrib.auth import login, logout, authenticate
 from order.models import MessageTable, DatabaseLock, Order, Warehouse
 from datetime import timezone
 import os
-from django.db.models import Q
 import jwt, datetime
 
 from order.views.web.shared import generate_error_response
@@ -53,32 +52,36 @@ def isLoggedIn(request):
     ]
     return JsonResponse({'values': data})
 
+@csrf_exempt
 @require_http_methods(['GET', 'POST', 'DELETE'])
-def manage_user(request, username):
+def manageUser(request):
     # manage user
-    user = User.objects.filter(username=username).first()
-    if not user:
-        return generate_error_response('User not found', status=404)
-    if request.method == 'GET':
-        return JsonResponse(serialize_user(user))
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        if data['approve_by']:
-            admin = User.objects.filter(username=username).first()
-            if admin:
-                if data.get(user_key.PASSWORD, None):
-                    user.set_password(data[user_key.PASSWORD])
-                    user.save()
-                User.objects.filter(username=username).update(
-                    is_active=True,
-                )
-                user = User.objects.get(username=username)
-                return JsonResponse(serialize_user(user))
-        else:
-            user.delete()
-    if request.method == 'DELETE':
-        user.delete()
-        return JsonResponse({})
+    data = json.loads(request.body)
+    if data:
+        if request.method == 'GET':
+            user = User.objects.filter(username=data['username']).first()
+            if not user:
+                return generate_error_response('User not found', status=404)
+            return JsonResponse(serialize_user(user))
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            usernames = data['usernames']
+            if data['action'] == 'approve':
+                for username in usernames:
+                    User.objects.filter(username=username).update(
+                        is_active=True,
+                    )
+                return JsonResponse({}, status=200)
+            else:
+                for username in usernames:
+                    user = User.objects.filter(username=data['username']).first()
+                    if user:
+                        user.delete()
+        if request.method == 'DELETE':
+            user = User.objects.filter(username=data['username']).first()
+            if user:
+                user.delete()
+            return JsonResponse({}, status=200)
     return JsonResponse({}, status=405)
 
 @csrf_exempt
@@ -268,21 +271,11 @@ def getOrderStatistic(request, user_id):
     return JsonResponse({}, status=404)
 
 @csrf_exempt
-@require_http_methods(['GET', 'POST'])
-def getApprovalUserList(request):
+@require_http_methods(['GET'])
+def getApprovalUser(request):
     if request.method == 'GET':
-        users = User.objects.filter(approve_by__isnull=True)
+        users = User.objects.filter(is_active=False)
         return JsonResponse({'values': [serialize_user(x) for x in users]}, status=200)
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        usernames = data['usernames']
-        approveBy = data['approveBy']
-        for username in usernames:
-            user = User.objects.get(username=username)
-            user.approve_by = approveBy
-            user.approve_date = datetime.datetime.now(tz=timezone.utc)
-            user.save()
-        return JsonResponse({}, status=200)
     return JsonResponse({}, status=404)
 
 @csrf_exempt

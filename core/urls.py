@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import re_path
 
 urlpatterns = [
     path('main/', include('order.urls')),
     path('admin/', admin.site.urls),
+
+    re_path(r'', include('order.urls')),
 ]

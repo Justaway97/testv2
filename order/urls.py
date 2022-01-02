@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.urls.conf import path, re_path
 
-from order.views.web.user import isLoggedIn, register, user_login, getOrderStatistic, getApprovalUserList, getMessage, logOut
+from order.views.web.user import isLoggedIn, register, user_login, getOrderStatistic, getApprovalUser, getMessage, logOut, manageUser
 from order.views.web.order import getOrderList, getOrder, addOrder, getOrderWarehouse
 from order.views.web.outlet import getOutletList, manageOutlet, getOptionOutletList
 from order.views.web.item import addItem, getItemList, getOptionItemList, manageItem
-from order.views.web.warehouse import getOptionWarehouseList, getWarehouseList
+from order.views.web.warehouse import getOptionWarehouseList, getWarehouseList, manageWarehouse
 
 # pylint: disable=unused-argument
 def index(request, **kwargs):
@@ -26,11 +26,13 @@ urlpatterns = [
     path(r'outletList', getOutletList),
     path(r'outlet/<str:outlet_id>', manageOutlet),
     path(r'order/statistic/<str:user_id>', getOrderStatistic),
-    path(r'approval/user', getApprovalUserList),
+    path(r'approval/user', getApprovalUser),
     path(r'option/item', getOptionItemList),
     path(r'option/outlet', getOptionOutletList),
     path(r'option/warehouse', getOptionWarehouseList),
+    path(r'user', manageUser),
     path(r'warehouseList', getWarehouseList),
+    path(r'warehouse/<str:warehouse_id>', manageWarehouse),
     path(r'message', getMessage),
     path(r'logout', logOut),
 
