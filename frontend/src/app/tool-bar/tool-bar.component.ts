@@ -23,14 +23,15 @@ export class ToolBarComponent implements OnInit, OnChanges {
   @Output() displayUserApprovalButton = new EventEmitter();
   @Output() displayOrderWarehouseButton = new EventEmitter();
   @Output() displayWarehouseButton = new EventEmitter();
+  @Output() filterNav = new EventEmitter();
 
   @Input() access: string;
-  @Input() colourSelection!: string;
-  @Input() allSearchOptions!: any[];
-  @Input() displayMyCart!: boolean;
+  @Input() colourSelection: string;
+  @Input() allSearchOptions: any[];
+  @Input() displayMyCart: boolean;
   @Input() title: string;
-  searchControl!: FormControl;
-  searchOptions!: Observable<any[]>;
+  searchControl: FormControl;
+  searchOptions: Observable<any[]>;
   flag: boolean = false;
   isDataLoaded = false;
 
@@ -120,5 +121,9 @@ export class ToolBarComponent implements OnInit, OnChanges {
     }).add(() => {
       this.router.navigateByUrl(Url.getLoginURL());
     });
+  }
+
+  goToSideNav() {
+    this.filterNav.emit();
   }
 }

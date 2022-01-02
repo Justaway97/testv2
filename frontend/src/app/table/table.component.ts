@@ -45,8 +45,10 @@ export class TableComponent implements OnInit, OnChanges {
     if (this.requiredCheckButton) {
       this.columns.push('select');
     }
-    console.log(message);
-    this.columns.push(...Object.keys(this.dataSource.data[0]));
+    console.log(message, 'eeee');
+    if (this.dataSource.data.length > 0) {
+      this.columns.push(...Object.keys(this.dataSource.data[0]));
+    }
     // this.columns.forEach((x, i) => 
     //   this.columns[i] = message[x]? { key: x,
     //                                   value: message[x]}

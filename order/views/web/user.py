@@ -6,10 +6,7 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 from django.views.decorators.csrf import csrf_exempt
 from core.settings import MEDIA_ROOT, MEDIA_URL
 from django.contrib.auth import login, logout, authenticate
-import base64
-from PIL import Image
-from io import BytesIO
-from order.models import Item, MessageTable, Order, Outlet, DatabaseLock, Warehouse
+from order.models import MessageTable, DatabaseLock, Order, Warehouse
 from datetime import timezone
 import os
 from django.db.models import Q
@@ -57,9 +54,9 @@ def isLoggedIn(request):
     return JsonResponse({'values': data})
 
 @require_http_methods(['GET', 'POST', 'DELETE'])
-def manage_user(request, user_id):
+def manage_user(request, username):
     # manage user
-    user = User.objects.filter(pk=user_id).first()
+    user = User.objects.filter(username=username).first()
     if not user:
         return generate_error_response('User not found', status=404)
     if request.method == 'GET':
@@ -67,16 +64,15 @@ def manage_user(request, user_id):
     if request.method == 'POST':
         data = json.loads(request.body)
         if data['approve_by']:
-            admin = User.objects.filter(pk=user_id).first()
+            admin = User.objects.filter(username=username).first()
             if admin:
                 if data.get(user_key.PASSWORD, None):
                     user.set_password(data[user_key.PASSWORD])
                     user.save()
-                User.objects.filter(pk=user_id).update(
-                    username=data[user_key.USERNAME],
+                User.objects.filter(username=username).update(
                     is_active=True,
                 )
-                user = User.objects.get(pk=user_id)
+                user = User.objects.get(username=username)
                 return JsonResponse(serialize_user(user))
         else:
             user.delete()
@@ -110,7 +106,17 @@ def user_login(request):
     user = authenticate(username=username, password=password)
     if user:
         login(request, user)
-        return JsonResponse({'username': username}, status=200)
+        res = {
+            'username': username
+        }
+        payload = {
+            'id': user.id,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5),
+            'iat': datetime.datetime.utcnow()
+        }
+
+        token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
+        return JsonResponse({'values': res, 'token': token}, status=200)
     return generate_error_response('Invalid username/password', status=401)
 
 
@@ -145,36 +151,6 @@ def unlockDatabase(tableName):
     lock.save()
     return True
 
-def saveImageInFolder(data):
-    # save image into media/images folder with <item name>-<package>.png 
-    im = Image.open(BytesIO(base64.b64decode(data['image']['content'].split(',')[1])))
-    im.save('media/images/' + data['item_name'] + '-' + data['package'] + '.' + data['image']['filename'].split('.')[1], 'PNG')
-    return 'images/'+data['item_name'] + '-' + data['package'] + '.' + data['image']['filename'].split('.')[1]
-
-def removeImage(filename):
-    if os.path.exists(filename):
-        os.remove(filename)
-
-def isItemExist(data, item_id = 0):
-    if item_id != 0:
-        item = Item.objects.filter(item_name=data['item_name'],
-                                     package=data['package']).filter(~Q(id=item_id)).count()
-    else:
-        item = Item.objects.filter(item_name=data['item_name'],
-                                     package=data['package']).count()
-    if item:
-        return True
-    return False
-
-def isOutletExist(data, outlet_id = 0):
-    if outlet_id != 0:
-        outlet = Outlet.objects.filter(outlet_name=data['outlet_name']).filter(~Q(id=outlet_id)).count()
-    else:
-        outlet = Outlet.objects.filter(outlet_name=data['outlet_name']).count()
-    if outlet:
-        return True
-    return False
-
 @require_GET
 def index(request):
     # for testing purpose
@@ -205,7 +181,7 @@ def getLogin(request):
         }
         payload = {
             'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5),
             'iat': datetime.datetime.utcnow()
         }
 
@@ -236,29 +212,6 @@ def getLogin(request):
     package = models.CharField(max_length=200)
     image_path = models.ImageField(null=True, blank=True, upload_to='images/')
     remark = models.TextField(null=True)
-# def serialize_item(item: Item):
-def serialize_item(item, isImageRequired: bool = False):
-    # serialize list of item
-    res = {
-        'item_id': item.pk,
-        'item_name': item.item_name,
-        'quantity': item.quantity,
-        'package': item.package,
-        'remark': item.remark,
-    }
-    if isImageRequired:
-        with open('media/' + str(item.image_path), "rb") as img_file:
-            res['image'] = base64.b64encode(img_file.read()).decode("utf-8")
-    return res
-
-def serialize_outlet(outlet):
-    # serialize list of outlet
-    res = {
-        'outlet_id': outlet.pk,
-        'outlet_name': outlet.outlet_name,
-        'outlet_address': outlet.outlet_address,
-    }
-    return res
 
 def serialize_message(message):
     # serialize list of outlet
@@ -267,169 +220,6 @@ def serialize_message(message):
         'message_description': message.message_description,
     }
     return res
-
-def serialize_order(order):
-    # serialize list of order
-    # print(order.get('target_received_date').replace(tzinfo=timezone.utc).timestamp())
-    res = {
-        # 'order_id': order.get('id'),
-        # 'item_name': order.get('item_id__item_name'),
-        # 'quantity': order.get('quantity'),
-        # 'order_date': order.get('order_date').replace(tzinfo=timezone.utc).timestamp(),
-        # 'order_by': order.get('order_by__username'),
-        # 'target_received_date': order.get('target_received_date').replace(tzinfo=timezone.utc).timestamp(),
-        # 'delay_day': order.get('delay_day'),
-        # 'outlet_id': order.get('outlet_id__outlet_name'),
-        # 'arrived_date': order.get('arrived_date').replace(tzinfo=timezone.utc).timestamp(),
-        # 'order_received': order.get('order_received'),
-        # 'order_completed': order.get('order_completed'),
-        # 'remark': order.get('remark'),
-        'order_id': order.id,
-        'item_name': order.item_id.item_name,
-        'quantity': order.quantity,
-        'order_date': order.order_date.replace(tzinfo=timezone.utc).timestamp(),
-        'order_by': order.order_by.username,
-        'target_received_date': order.target_received_date.replace(tzinfo=timezone.utc).timestamp(),
-        'delay_day': order.delay_day,
-        'outlet_id': order.outlet_id.outlet_name,
-        'arrived_date': order.arrived_date.replace(tzinfo=timezone.utc).timestamp() if order.arrived_date is not None else order.arrived_date,
-        'order_received': order.order_received,
-        'order_completed': order.order_completed,
-        'remark': order.remark,
-        # 'warehouse_id': order.warehouse_id,
-    }
-    return res
-
-def serialize_warehouse(warehouse):
-    res = {
-        'warehouse_id': warehouse.pk,
-        'warehouse_name': warehouse.warehouse_name,
-        'warehouse_address': warehouse.warehouse_address,
-    }
-    return res
-
-@require_GET
-def getItemList(request):
-    offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
-    print(offset)
-    items = Item.objects.all().order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
-    size = Item.objects.all().count()
-    return JsonResponse({'values': [serialize_item(x) for x in items], 'size': size}, status=200)
-
-@csrf_exempt
-@require_POST
-def addOrder(request):
-    # add new order
-    data = json.loads(request.body)
-    print(data)
-    outlet = Outlet.objects.get(outlet_name = data['outlet_name'])
-    warehouse = Warehouse.objects.get(warehouse_name = data['warehouse_name'])
-    user = User.objects.get(id = data['order_by'])
-    item = Item.objects.get(item_name = data['item_name'])
-    new_order = Order(item_id=item,
-                     quantity=data['quantity'],
-                   order_date=datetime.datetime.now(tz=timezone.utc),
-                     order_by=user,
-         target_received_date=data['target_received_date'],
-                    delay_day=data['delay_day'],
-                    outlet_id=outlet,
-               order_received=data['order_received'],
-              order_completed=data['order_completed'],
-                       remark=data['remark'],
-                 warehouse_id=warehouse)
-    new_order.save()
-    return JsonResponse({}, status=200)
-
-@csrf_exempt
-@require_POST
-def addItem(request):
-    # add new item
-    data = json.loads(request.body)
-    if isItemExist(data):
-        return generate_error_response('You cannot have two item with same item name and same package', status=409)
-    new_item = Item(item_name=data['item_name'],
-                     quantity=data['quantity'],
-                      package=data['package'],
-                   image_path=saveImageInFolder(data))
-    new_item.save()
-    return JsonResponse({}, status=200)
-
-@csrf_exempt
-@require_POST
-def addOutlet(request):
-    # add new item
-    data = json.loads(request.body)
-    if isOutletExist(data):
-        return generate_error_response('You cannot have two outlet with same item name and same package', status=409)
-    new_outlet = Outlet(outlet_name=data['outlet_name'],
-                   outlet_address=data['outlet_address'])
-    new_outlet.save()
-    return JsonResponse({}, status=200)
-
-@csrf_exempt
-@require_http_methods(['GET', 'POST', 'DELETE'])
-def manageItem(request, item_id):
-    # find, update and delete action
-    targetItem = Item.objects.get(id=item_id)
-    if request.method == 'GET':
-        if targetItem:
-            return JsonResponse({'values': serialize_item(targetItem,True)}, status=200)
-        return generate_error_response('Item not found!', status=404)
-    if request.method == 'POST':
-        if isItemExist(serialize_item(targetItem), item_id):
-            return generate_error_response('You cannot have two item with same item name and same package', status=409)
-        if targetItem is None:
-            return generate_error_response('Item not found!', status=404)
-        removeImage('media/' + str(targetItem.image_path))
-        data = json.loads(request.body)
-        targetItem.item_name = data['item_name']
-        targetItem.quantity = data['quantity']
-        targetItem.package = data['package']
-        targetItem.image_path = saveImageInFolder(data)
-        targetItem.remark = data['remark']
-        targetItem.save()
-        # return JsonResponse({}, status=200) all update function shouldnt return value back front end
-        return JsonResponse({'values': serialize_item(targetItem,True)}, status=200)
-    return generate_error_response({}, status=405)
-
-@csrf_exempt
-@require_http_methods(['GET', 'POST', 'DELETE'])
-def manageOutlet(request, outlet_id):
-    # find, update and delete action
-    targetOutlet = Outlet.objects.get(id=outlet_id)
-    if request.method == 'GET':
-        if targetOutlet:
-            return JsonResponse({'values': serialize_outlet(targetOutlet)}, status=200)
-        return generate_error_response('Item not found!', status=404)
-    if request.method == 'POST':
-        if isOutletExist(serialize_outlet(targetOutlet), outlet_id):
-            return generate_error_response('You cannot have two outlet with same name', status=409)
-        if targetOutlet is None:
-            return generate_error_response('outlet not found!', status=404)
-        targetOutlet.updateState(json.loads(request.body))
-        return JsonResponse({}, status=200)
-    return generate_error_response({}, status=405)
-
-@require_GET
-def getOutletList(request):
-    offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
-    print(offset)
-    outlets = Outlet.objects.all().order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
-    size = Outlet.objects.all().count()
-    return JsonResponse({'values': [serialize_outlet(x) for x in outlets], 'size': size}, status=200)
-
-@require_GET
-def getOrderList(request, user_id):
-    offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
-    print(offset)
-    orders = Order.objects.filter(order_by__id=user_id).order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
-    size = Order.objects.filter(order_by__id=user_id).count()
-    return JsonResponse({'values': [serialize_order(x) for x in orders], 'size': size}, status=200)
-
-@require_GET
-def getOrder(request, order_id):
-    order = Order.objects.filter(id=order_id).first()
-    return JsonResponse({'values': serialize_order(order)}, status=200)
 
 @require_GET
 def getOrderStatistic(request, user_id):
@@ -495,29 +285,6 @@ def getApprovalUserList(request):
         return JsonResponse({}, status=200)
     return JsonResponse({}, status=404)
 
-@require_GET
-def getOrderWarehouse(request):
-    offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
-    print(offset)
-    orders = Order.objects.filter(order_completed=False).order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
-    size = Order.objects.filter(order_completed=False).count()
-    return JsonResponse({'values': [serialize_order(x) for x in orders], 'size': size}, status=200)
-
-@require_GET
-def getOptionItemList(request):
-    items = Item.objects.all()
-    return JsonResponse({'values': [{'id':x.id , 'item_name':x.item_name} for x in items]}, status=200)
-
-@require_GET
-def getOptionOutletList(request):
-    outlets = Outlet.objects.all()
-    return JsonResponse({'values': [{'id':x.id , 'outlet_name':x.outlet_name} for x in outlets]}, status=200)
-
-@require_GET
-def getOptionWarehouseList(request):
-    warehouses = Warehouse.objects.all()
-    return JsonResponse({'values': [{'id':x.id , 'warehouse_name':x.warehouse_name} for x in warehouses]}, status=200)
-
 @csrf_exempt
 @require_POST
 def logOut(request):
@@ -529,11 +296,3 @@ def logOut(request):
 def getMessage(request):
     messages = MessageTable.objects.all()
     return JsonResponse({'values': [serialize_message(x) for x in messages]}, status=200)
-
-@require_GET
-def getWarehouseList(request):
-    offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
-    print(offset)
-    warehouses = Warehouse.objects.all().order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
-    size = Warehouse.objects.all().count()
-    return JsonResponse({'values': [serialize_warehouse(x) for x in warehouses], 'size': size}, status=200)

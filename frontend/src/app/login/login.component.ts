@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (!this.isRegister) {
       this.appService.login(this.loginForm?.value).subscribe((data: any) => {
+        sessionStorage.setItem('username', data.values.username);
         // console.log(data, 'login');
         // const token = this.dataService.getDecodedAccessToken(data.token);
         // sessionStorage.setItem('token', data.token);

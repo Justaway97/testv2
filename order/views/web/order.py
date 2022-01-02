@@ -77,3 +77,11 @@ def addOrder(request):
 def getOrder(request, order_id):
     order = Order.objects.filter(id=order_id).first()
     return JsonResponse({'values': serialize_order(order)}, status=200)
+
+@require_GET
+def getOrderWarehouse(request):
+    offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
+    print(offset)
+    orders = Order.objects.filter(order_completed=False).order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
+    size = Order.objects.filter(order_completed=False).count()
+    return JsonResponse({'values': [serialize_order(x) for x in orders], 'size': size}, status=200)

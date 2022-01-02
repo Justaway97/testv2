@@ -1,47 +1,19 @@
+<mat-card class="card white-color-text">
+    <mat-card-title class="title white-color-text">Overview</mat-card-title>
+    <mat-card-content style="display:inline;">
+        <div *ngFor="let d of data">
+            <br>
+            <mat-label class="label white-color-text">{{ d.title }}</mat-label>
+            <br>
+            <br>
+            <div class="row">
+                <div class="col marginLeftRight">
+                    <mat-label class="field white-color-text">{{ d.value }}</mat-label>
+                </div>
+            </div>
+            <br>
+            <br>
+        </div>
+    </mat-card-content>
+</mat-card>
 
-<!-- <div class="main-div"> -->
-    <mat-card class="card white-color-text">
-        <!-- <ng-container *ngIf="isRegister"> -->
-            <mat-card-title class="title white-color-text">Overview</mat-card-title>
-            <mat-card-content style="display:inline;">
-                <div *ngFor="let d of data">
-                    <br>
-                    <mat-label class="label white-color-text">{{ d.title }}</mat-label>
-                    <br>
-                    <br>
-                    <div class="row">
-                    <div class="col marginLeftRight">
-                        <mat-label class="field white-color-text">{{ d.value }}</mat-label>
-                    </div>
-                    </div>
-                    <br>
-                    <br>
-                </div>
-                <!-- <div class="row">
-                <div class="col marginLeftRight">
-                    <mat-form-field class="eighty-five-width">
-                    <input matInput placeholder="Username" [value]="loginForm.getRawValue()?.username" formControlName="username">
-                    </mat-form-field>
-                </div>
-                <div class="col marginLeftRight">
-                    <mat-form-field class="eighty-five-width">
-                    <input matInput placeholder="Password" [value]="loginForm.getRawValue()?.password" formControlName="password">
-                    </mat-form-field>
-                </div>
-                </div>
-                <div class="row">
-                <div class="col marginLeftRight">
-                    <mat-form-field class="eighty-five-width">
-                    <input matInput placeholder="Role" [value]="loginForm.getRawValue()?.role" formControlName="role">
-                    </mat-form-field>
-                </div>
-                <div class="col marginLeftRight">
-                    <mat-form-field class="eighty-five-width">
-                    <input matInput placeholder="Handphone Number" [value]="loginForm.getRawValue()?.handphone_number" formControlName="handphone_number">
-                    </mat-form-field>
-                </div>
-                </div> -->
-            </mat-card-content>
-        <!-- </ng-container> -->
-    </mat-card>
-<!-- </div> -->

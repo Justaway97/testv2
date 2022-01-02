@@ -17,7 +17,7 @@ import { cloneDeep } from 'lodash';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+  filterNav: string[] = [];
   itemList = [];
   searchOptions!: any[];
   isDataLoaded = false;
@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.filterNav = ['Home', 'Item', 'Outlet', 'UserApproval', 'Order', 'Order', 'Warehouse'];
     this.access = localStorage.getItem('access');
     this.username = localStorage.getItem('id');
     this.searchCriteria = {
@@ -367,6 +368,10 @@ export class HomeComponent implements OnInit {
                           },
                         });
     });
+  }
+
+  getNav(nav: string) {
+    return nav.toLowerCase();
   }
 }
 

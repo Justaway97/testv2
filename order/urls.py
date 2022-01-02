@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from django.urls.conf import path, re_path
 
-from order.views.web.user import isLoggedIn, register, user_login, addItem, getItemList, getOrderList, getOrderWarehouse, getOrder, addOrder, manageItem, getOutletList, manageOutlet, getOrderStatistic, getApprovalUserList, getOptionItemList, getOptionOutletList, getOptionWarehouseList, getWarehouseList, getMessage, logOut
+from order.views.web.user import isLoggedIn, register, user_login, getOrderStatistic, getApprovalUserList, getMessage, logOut
+from order.views.web.order import getOrderList, getOrder, addOrder, getOrderWarehouse
+from order.views.web.outlet import getOutletList, manageOutlet, getOptionOutletList
+from order.views.web.item import addItem, getItemList, getOptionItemList, manageItem
+from order.views.web.warehouse import getOptionWarehouseList, getWarehouseList
 
 # pylint: disable=unused-argument
 def index(request, **kwargs):

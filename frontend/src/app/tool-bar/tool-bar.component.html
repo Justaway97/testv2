@@ -2,25 +2,30 @@
   will seperate them into one template each -->
 <ng-container *ngIf="isDataLoaded">
   <ng-container *ngIf="flag">
-    <mat-toolbar color="primary" class="secondary">
-      <div style="display:flex;align-items: center;width:100%;">
-        <span>{{ title }}</span>
-        <div class="example-spacer">
-          <ng-template [ngTemplateOutlet]="addItem"></ng-template>
+    <div class="side-nav-container">
+      <mat-toolbar color="primary" class="secondary">
+        <div style="display:flex;align-items: center;width:100%;">
+          <button mat-icon-button (click)="goToSideNav()"><mat-icon>menu</mat-icon></button>
+          <span>{{ title }}</span>
+          <div class="example-spacer">
+            <ng-template [ngTemplateOutlet]="addItem"></ng-template>
+          </div>
         </div>
-      </div>
-    </mat-toolbar>
+      </mat-toolbar>
+
+      <!-- <mat-sidenav-container class="example-sidenav-container">
+        <mat-sidenav #snav>
+          <mat-nav-list>
+            <a mat-list-item routerLink="." *ngFor="let nav of filterNav" [routerLink]="['/'+getNav(nav)]">{{nav}}</a>
+          </mat-nav-list>
+        </mat-sidenav>
+      </mat-sidenav-container> -->
+    </div>
   </ng-container>
   <ng-container *ngIf="!flag">
     <mat-toolbar color="warn" class="main">
       <div style="display:flex;align-items: center;width:100%;">
-        <ng-template [ngTemplateOutlet]="home"></ng-template>
-        <ng-template [ngTemplateOutlet]="item"></ng-template>
-        <ng-template [ngTemplateOutlet]="outlet"></ng-template>
-        <ng-template [ngTemplateOutlet]="userApproval"></ng-template>
-        <ng-template [ngTemplateOutlet]="order"></ng-template>
-        <ng-template [ngTemplateOutlet]="orderWarehouse"></ng-template>
-        <ng-template [ngTemplateOutlet]="warehouse"></ng-template>
+        Welcome xxx
         <div class="example-spacer">
           <ng-template [ngTemplateOutlet]="logout"></ng-template>
         </div>

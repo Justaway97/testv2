@@ -5,6 +5,9 @@ export abstract class Url {
     public static getLoginURL(): string {
         return 'login';
     }
+    public static getItemURL(): string {
+        return 'item';
+    }
     public static getHomeURL(): string {
         return 'home';
     }
@@ -19,6 +22,9 @@ export abstract class Url {
     }
     public static getApprovalURL(): string {
         return 'approval/user';
+    }
+    public static getUserApprovalURL(): string {
+        return 'userapproval';
     }
     public static getOrderWarehouseURL(): string {
         return 'order/warehouse';
