@@ -101,7 +101,7 @@ def register(request):
 
 @csrf_exempt
 @require_POST
-def user_login(request):
+def userLogin(request):
     # login
     data = json.loads(request.body)
     username = data['username']
@@ -110,6 +110,7 @@ def user_login(request):
     if user:
         login(request, user)
         res = {
+            'id': user.id,
             'username': username
         }
         payload = {

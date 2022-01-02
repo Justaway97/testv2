@@ -34,6 +34,7 @@ export class ToolBarComponent implements OnInit, OnChanges {
   searchOptions: Observable<any[]>;
   flag: boolean = false;
   isDataLoaded = false;
+  username;
 
   constructor(
     private dialog: MatDialog,
@@ -41,7 +42,9 @@ export class ToolBarComponent implements OnInit, OnChanges {
     private dataService: DataService,
     private commonService: CommonService,
     private router: Router,
-  ) {}
+  ) {
+    this.username = sessionStorage.getItem('username');
+  }
   
   ngOnChanges(changes: SimpleChanges): void {
     if ('title' in changes) {

@@ -207,7 +207,7 @@ export class HomeComponent implements OnInit {
   }
 
   getOrderList() {
-    this.appService.getOrderList(localStorage.getItem('id') as string, this.searchCriteria).subscribe((data: any) => {
+    this.appService.getOrderList(sessionStorage.getItem('id') as string, this.searchCriteria).subscribe((data: any) => {
       this.orderList = this.formatOrderList(data.values);
       this.tableSize = data.size;
     }).add(() => {

@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { AppService } from '../services/app.service';
 import { DataService } from '../services/data.service';
+import { Url } from '../url';
 
 @Component({
   selector: 'app-order-detail',
@@ -86,7 +87,7 @@ export class OrderDetailComponent implements OnInit, OnChanges {
       'warehouse_name': [this.selectedRow?.warehouse? this.selectedRow.warehouse: '', Validators.required],
       'order_id': [this.selectedRow?.order_id? this.selectedRow.order_id: '', Validators.required],
       'order_date': [{ value: this.selectedRow?.order_date? new Date(this.selectedRow.order_date): null, disabled: true }, Validators.required],
-      'order_by': [this.selectedRow?.order_by? this.selectedRow.order_by: localStorage.getItem('id'), Validators.required],
+      'order_by': [this.selectedRow?.order_by? this.selectedRow.order_by: sessionStorage.getItem('id'), Validators.required],
       'delay_day': [this.selectedRow?.delay_day? this.selectedRow.delay_day: 0, Validators.required],
       'arrived_date': [this.selectedRow?.arrived_date? this.selectedRow.arrived_date: null, Validators.required],
       'order_received': [this.selectedRow?.order_received? this.selectedRow.order_received: false, Validators.required],
@@ -98,11 +99,17 @@ export class OrderDetailComponent implements OnInit, OnChanges {
     console.log(this.orderForm.value);
     if (!this.selectedRow) {
       this.appService.addOrder(this.orderForm.value).subscribe((data: any) => {
-        if (data.values.success) {
-          console.log('Data successfully added!');
-          this.toggleSideNav.emit();
-        }
-      })
+        console.log('Data successfully added!');
+        this.toggleSideNav.emit();
+      }, error => {
+        const dialogRef = this.dialog.open(DialogComponent, {
+                            data       : {
+                              message: error.error.error,
+                            },
+                          });
+      }).add(() => {
+        this.isDataLoaded = true;
+      });
     }
     // this.appService.addOrder()
   }
