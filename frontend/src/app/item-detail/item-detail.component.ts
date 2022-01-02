@@ -23,6 +23,7 @@ export class ItemDetailComponent implements OnInit {
     private appService: AppService,
     private dataService: DataService,
   ) { 
+    console.log('item detail constructor');
   }
 
   ngOnInit(): void {

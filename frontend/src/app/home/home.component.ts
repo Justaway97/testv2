@@ -230,20 +230,12 @@ export class HomeComponent implements OnInit {
 
   toggleOrderDetailPanel(row: any) {
     this.selectedRow = row;
-    if (this.access === 'admin') {
-      this.toggleUpdatePanel();
-    } else {
-      this.rightDrawer.toggle();
-    }
+    this.toggleUpdatePanel();
   }
 
   toggleOutletDetailPanel(row: any) {
     this.selectedRow = row;
-    if (this.access === 'admin') {
-      this.toggleUpdatePanel();
-    } else {
-      this.rightDrawer.toggle();
-    }
+    this.toggleUpdatePanel();
   }
 
   toggleApprovalUserPanel(row: any) {
@@ -253,11 +245,7 @@ export class HomeComponent implements OnInit {
 
   toggleWarehousePanel(row: any) {
     this.selectedRow = row;
-    if (this.access === 'admin') {
-      this.toggleUpdatePanel();
-    } else {
-      this.rightDrawer.toggle();
-    }
+    this.toggleUpdatePanel();
   }
 
   toggleUpdatePanel() {

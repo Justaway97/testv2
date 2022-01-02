@@ -78,6 +78,7 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   getSelectedRow(row: any) {
+    console.log(row);
     this.selectedRow.emit(row);
   }
 
