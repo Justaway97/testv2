@@ -5,7 +5,7 @@
             <mat-card-title class="col">{{ getTitle() }}</mat-card-title>
             <div class="test-card">
               <mat-card-title class="col">
-                <mat-icon class="close" (click)="toggleSideNav.emit()">close</mat-icon>
+                <mat-icon class="close" (click)="toggleSideNav.emit('close')">close</mat-icon>
               </mat-card-title>
             </div>
           </div>
@@ -64,13 +64,6 @@
             </div>
           </div>
           <div class="row">
-            <div class="col" *ngIf="selectedRow">
-              <mat-form-field class="full-width">
-                <input matInput placeholder="Delay (Day)" [value]="orderForm.getRawValue()?.delay_day" formControlName="delay_day">
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
             <div class="col">
               <mat-form-field class="full-width">
                 <mat-label>Outlet</mat-label>
@@ -92,26 +85,6 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col" *ngIf="selectedRow">
-              <mat-radio-group class="button-group" formControlName="order_received">
-                <mat-label class="radio-label">Received?      </mat-label>
-                <mat-radio-button class="button-radio" value="Y">Yes</mat-radio-button>
-                <mat-radio-button class="button-radio" value="N">No</mat-radio-button>
-              </mat-radio-group>
-              <mat-form-field class="full-width" appearance="fill">
-                <mat-label>Arrived Date</mat-label>
-                <input matInput formControlName="arrived_date" [matDatepicker]="pickerArrivedDate">
-                <mat-datepicker-toggle matSuffix [for]="pickerArrivedDate"></mat-datepicker-toggle>
-                <mat-datepicker #pickerArrivedDate></mat-datepicker>
-              </mat-form-field>
-              <mat-radio-group class="button-group" formControlName="order_completed">
-                <mat-label class="radio-label">Completed?      </mat-label>
-                <mat-radio-button class="button-radio" value="Y">Yes</mat-radio-button>
-                <mat-radio-button class="button-radio" value="N">No</mat-radio-button>
-              </mat-radio-group>
             </div>
           </div>
           <div class="row">

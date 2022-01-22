@@ -1,0 +1,11 @@
+.example-spacer {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: right;
+    height: inherit;
+    align-items: center;
+}
+
+mat-icon {
+  cursor: pointer;
+}

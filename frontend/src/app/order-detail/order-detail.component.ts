@@ -81,18 +81,16 @@ export class OrderDetailComponent implements OnInit, OnChanges {
       'item_name': [this.selectedRow?.item_name? this.selectedRow.item_name: '', Validators.required],
       'quantity': [this.selectedRow?.quantity? this.selectedRow.quantity: 0, Validators.required],
       'package': [this.selectedRow?.package? this.selectedRow.package: '', Validators.required],
-      'target_received_date': [this.selectedRow?.target_received_date? new Date(this.selectedRow.target_received_date): '', Validators.required],
+      'target_received_date': [this.selectedRow?.target_received_date? new Date(this.selectedRow.target_received_date * 1000): '', Validators.required],
       'outlet_name': [this.selectedRow?.outlet_id? this.selectedRow.outlet_id: '', Validators.required],
       'remark': [this.selectedRow?.remark? this.selectedRow.remark: '', Validators.required],
-      'warehouse_name': [this.selectedRow?.warehouse? this.selectedRow.warehouse: '', Validators.required],
+      'warehouse_name': [this.selectedRow?.warehouse_name? this.selectedRow.warehouse_name: '', Validators.required],
       'order_id': [this.selectedRow?.order_id? this.selectedRow.order_id: '', Validators.required],
-      'order_date': [{ value: this.selectedRow?.order_date? new Date(this.selectedRow.order_date): null, disabled: true }, Validators.required],
+      'order_date': [{ value: this.selectedRow?.order_date? new Date(this.selectedRow.order_date * 1000): null, disabled: true }, Validators.required],
       'order_by': [this.selectedRow?.order_by? this.selectedRow.order_by: sessionStorage.getItem('id'), Validators.required],
-      'delay_day': [this.selectedRow?.delay_day? this.selectedRow.delay_day: 0, Validators.required],
-      'arrived_date': [this.selectedRow?.arrived_date? this.selectedRow.arrived_date: null, Validators.required],
-      'order_received': [this.selectedRow?.order_received? this.selectedRow.order_received: false, Validators.required],
-      'order_completed': [this.selectedRow?.order_completed? this.selectedRow.order_completed: false, Validators.required],
+      'arrived_date': [{ value: this.selectedRow?.arrived_date? this.selectedRow.arrived_date: null, disabled: true }, Validators.required],
     });
+    console.log(this.selectedRow);
   }
 
   submit() {
@@ -100,7 +98,7 @@ export class OrderDetailComponent implements OnInit, OnChanges {
     if (!this.selectedRow) {
       this.appService.addOrder(this.orderForm.value).subscribe((data: any) => {
         console.log('Data successfully added!');
-        this.toggleSideNav.emit();
+        this.toggleSideNav.emit('added');
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
@@ -116,5 +114,13 @@ export class OrderDetailComponent implements OnInit, OnChanges {
 
   getTitle() {
     return this.selectedRow? 'Order Detail - '.concat(this.selectedRow.order_id): 'New Order';
+  }
+
+  close() {
+    if (this.orderForm.dirty) {
+
+    } else {
+      this.toggleSideNav.emit('close');
+    }
   }
 }

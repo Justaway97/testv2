@@ -2,7 +2,7 @@
 import json
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_http_methods
+from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from order.models import Warehouse
 from order.views.web.shared import generate_error_response
 
@@ -27,6 +27,18 @@ def getWarehouseList(request):
 def getOptionWarehouseList(request):
     warehouses = Warehouse.objects.all()
     return JsonResponse({'values': [{'id':x.id , 'warehouse_name':x.warehouse_name} for x in warehouses]}, status=200)
+
+@csrf_exempt
+@require_POST
+def addWarehouse(request):
+    # add new item
+    data = json.loads(request.body)
+    if isWarehouseExist(data):
+        return generate_error_response('You cannot have two warehouse with same name', status=409)
+    new_warehouse = Warehouse(warehouse_name=data['warehouse_name'],
+                   warehouse_address=data['warehouse_address'])
+    new_warehouse.save()
+    return JsonResponse({}, status=200)
 
 @csrf_exempt
 @require_http_methods(['GET', 'POST', 'DELETE'])

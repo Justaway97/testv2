@@ -18,18 +18,22 @@ export class ToolBarComponent implements OnInit, OnChanges {
   today: number = Date.now();
   @Output() displayOrderButton = new EventEmitter();
   @Output() displayHomeButton = new EventEmitter();
-  @Output() displayAddButton = new EventEmitter();
+  @Output() toggleAddPanel = new EventEmitter();
   @Output() displayOutletButton = new EventEmitter();
   @Output() displayUserApprovalButton = new EventEmitter();
   @Output() displayOrderWarehouseButton = new EventEmitter();
   @Output() displayWarehouseButton = new EventEmitter();
   @Output() filterNav = new EventEmitter();
+  @Output() filterDialog = new EventEmitter();
 
   @Input() access: string;
   @Input() colourSelection: string;
   @Input() allSearchOptions: any[];
   @Input() displayMyCart: boolean;
   @Input() title: string;
+  @Input() displayAddButton: boolean;
+  @Input() displayFilterButton: boolean;
+
   searchControl: FormControl;
   searchOptions: Observable<any[]>;
   flag: boolean = false;
@@ -100,7 +104,7 @@ export class ToolBarComponent implements OnInit, OnChanges {
   }
 
   goToAdd() {
-    this.displayAddButton.emit();
+    this.toggleAddPanel.emit();
   }
 
   goToOutlet() {
@@ -128,5 +132,9 @@ export class ToolBarComponent implements OnInit, OnChanges {
 
   goToSideNav() {
     this.filterNav.emit();
+  }
+
+  filterSearchCriteria() {
+    this.filterDialog.emit();
   }
 }

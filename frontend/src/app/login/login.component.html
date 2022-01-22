@@ -16,7 +16,7 @@
                     <div class="row">
                     <div class="col marginLeftRight">
                         <mat-form-field class="full-width">
-                        <input matInput placeholder="Password" [value]="loginForm.getRawValue()?.password" formControlName="password">
+                        <input matInput type="password" placeholder="Password" [value]="loginForm.getRawValue()?.password" formControlName="password">
                         </mat-form-field>
                     </div>
                     </div>
@@ -35,14 +35,14 @@
                     <div class="row">
                     <div class="col marginLeftRight">
                         <mat-form-field class="full-width">
-                        <input matInput placeholder="Password" [value]="loginForm.getRawValue()?.password" formControlName="password">
+                        <input matInput type="password" placeholder="Password" [value]="loginForm.getRawValue()?.password" formControlName="password">
                         </mat-form-field>
                     </div>
                     </div>
                 </mat-card-content>
             </ng-container>
             <mat-card-actions class="col marginLeftRight">
-                <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.dirty" (click)="onSubmit()">Submit</button>
+                <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.dirty" (click)="onSubmit()">Login</button>
                 <button mat-raised-button color="warn" type="submit" (click)="reset()">Reset</button>
             </mat-card-actions>
         </form>

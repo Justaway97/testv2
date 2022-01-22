@@ -63,13 +63,12 @@ class Order(models.Model):
     order_date = models.DateTimeField()
     order_by = models.ForeignKey(User, on_delete=models.CASCADE)
     target_received_date = models.DateTimeField()
-    delay_day = models.IntegerField(default=0)
     outlet_id = models.ForeignKey(Outlet, on_delete=models.CASCADE)
     arrived_date = models.DateTimeField(null=True)
-    order_received = models.BooleanField()
-    order_completed = models.BooleanField()
+    order_status = models.CharField(max_length=100,default='P')
     remark = models.TextField(null=True)
     warehouse_id = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
+    # update to status, remove order_received or order completed, status use code -> completed, confirmed, sent, canceled
 
     def updateState(self, data):
         if 'quantity' in data:
@@ -80,20 +79,16 @@ class Order(models.Model):
             self.order_by = data['order_by']
         if 'target_received_date' in data:
             self.target_received_date = data['target_received_date']
-        if 'delay_day' in data:
-            self.delay_day = data['delay_day']
         if 'outlet_id' in data:
             self.outlet_id = data['outlet_id']
         if 'arrived_date' in data:
             self.arrived_date = data['arrived_date']
-        if 'order_received' in data:
-            self.order_received = data['order_received']
-        if 'order_completed' in data:
-            self.order_completed = data['order_completed']
+        if 'order_status' in data:
+            self.order_status = data['order_status']
         if 'remark' in data:
             self.remark = data['remark']
-        # if 'warehouse' in data:
-        #     self.warehouse = data['warehouse']
+        if 'warehouse' in data:
+            self.warehouse = data['warehouse']
         super().save()
 
     def __str__(self):

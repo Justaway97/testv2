@@ -18,10 +18,10 @@ export class AppService {
     private static URL_ITEM = '/item';
     private static URL_PK = '/<id>';
     private static URL_OUTLET = '/outlet';
-    private static URL_STATISTIC = '/statistic';
     private static URL_APPROVAL = '/approval';
     private static URL_USER = '/user';
     private static URL_WAREHOUSE = '/warehouse';
+    private static URL_STATUS = '/status';
     private static URL_OPTION = '/option';
     private static URL_MESSAGE = '/message';
     private static URL_WAREHOUSE_LIST = '/warehouseList';
@@ -102,6 +102,15 @@ export class AppService {
         return this.http.post(AppService.URL_HOME.concat(AppService.URL_OUTLET), value, {withCredentials: true});
     }
 
+    addWarehouse(value: any) {
+        return this.http.post(AppService.URL_HOME.concat(AppService.URL_WAREHOUSE), value, {withCredentials: true});
+    }
+
+    updateWarehouse(value: any) {
+        const id = value.id
+        return this.http.post(AppService.URL_HOME.concat(AppService.URL_WAREHOUSE).concat(AppService.URL_PK.replace('<id>',id)), value, {withCredentials: true});
+    }
+
     getOutlet(id: any) {
         return this.http.get(AppService.URL_HOME.concat(AppService.URL_OUTLET).concat(AppService.URL_PK.replace('<id>',id)), {withCredentials: true});
     }
@@ -109,10 +118,6 @@ export class AppService {
     updateOutlet(value: any) {
         const id = value.id
         return this.http.post(AppService.URL_HOME.concat(AppService.URL_OUTLET).concat(AppService.URL_PK.replace('<id>',id)), value, {withCredentials: true});
-    }
-
-    getOrderStatistic(id: any) {
-        return this.http.get(AppService.URL_HOME.concat(AppService.URL_ORDER).concat(AppService.URL_STATISTIC).concat(AppService.URL_PK.replace('<id>',id)), { withCredentials: true});
     }
 
     getApprovalUserList() {
@@ -200,6 +205,20 @@ export class AppService {
     }
 
     getWarehouse(id: any) {
-      return this.http.get(AppService.URL_HOME.concat(AppService.URL_WAREHOUSE).concat(AppService.URL_PK.replace('<id>',id)), {withCredentials: true});
+        return this.http.get(
+            AppService.URL_HOME.concat(AppService.URL_WAREHOUSE).concat(AppService.URL_PK.replace('<id>',id)),
+            {
+                withCredentials: true
+            }
+        );
+    }
+
+    getOrderStatus(id: any) {
+        return this.http.get(
+            AppService.URL_HOME.concat(AppService.URL_STATUS).concat(AppService.URL_PK.replace('<id>',id)),
+            {
+                withCredentials: true
+            }
+        );
     }
 }

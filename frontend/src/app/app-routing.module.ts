@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: Url.getApprovalURL(), component: HomeComponent },
   { path: Url.getOrderWarehouseURL(), component: HomeComponent },
   { path: Url.getWarehouseURL(), component: HomeComponent },
+  { path: Url.getDashboardURL(), component: HomeComponent },
   { path: Url.getUserApprovalURL(), redirectTo: Url.getApprovalURL(), pathMatch: 'full' },
   { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];

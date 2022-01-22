@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { message } from '../message.constant';
+import { message } from '../app.constant';
 
 @Component({
   selector: 'app-table',
@@ -45,7 +45,7 @@ export class TableComponent implements OnInit, OnChanges {
     if (this.requiredCheckButton) {
       this.columns.push('select');
     }
-    console.log(message, 'eeee');
+    console.log(this.dataSource);
     if (this.dataSource.data.length > 0) {
       this.columns.push(...Object.keys(this.dataSource.data[0]));
     }

@@ -7,7 +7,12 @@
           <button mat-icon-button (click)="goToSideNav()"><mat-icon>menu</mat-icon></button>
           <span>{{ title }}</span>
           <div class="example-spacer">
-            <ng-template [ngTemplateOutlet]="addItem"></ng-template>
+            <ng-container *ngIf="displayFilterButton">
+              <ng-template [ngTemplateOutlet]="filter"></ng-template>
+            </ng-container>
+            <ng-container *ngIf="displayAddButton">
+              <ng-template [ngTemplateOutlet]="addNew"></ng-template>
+            </ng-container>
           </div>
         </div>
       </mat-toolbar>
@@ -46,10 +51,12 @@
       <button mat-button (click)="goToOutlet()">Outlet</button>
     </div>
   </ng-template>
-<!-- add item icon -->
-  <ng-template #addItem >
+<!-- add new icon -->
+  <ng-template #addNew >
     <div>
-      <button mat-button color="white" (click)="goToAdd()">Add Item</button>
+      <button mat-button color="white" (click)="goToAdd()">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   </ng-template>
 <!-- add item icon -->
@@ -65,15 +72,15 @@
     </div>
   </ng-template>
 <!-- add item icon -->
-  <ng-template #warehouse >
-    <div>
-      <button mat-button color="white" (click)="goToWarehouse()">Warehouse</button>
-    </div>
-  </ng-template>
-<!-- add item icon -->
   <ng-template #logout >
     <div>
       <button mat-button color="white" (click)="logOut()">Log Out</button>
+    </div>
+  </ng-template>
+<!-- filter icon -->
+  <ng-template #filter >
+    <div>
+      <button mat-button color="white" (click)="filterSearchCriteria()">Filter</button>
     </div>
   </ng-template>
 </ng-container>

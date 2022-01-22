@@ -1,4 +1,7 @@
 export abstract class Url {
+    static getDashboardURL(): string {
+        return 'dashboard';
+    }
     public static getWarehouseURL(): string {
         return 'warehouse';
     }

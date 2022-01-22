@@ -34,19 +34,17 @@ export class WarehouseComponent implements OnInit {
   submit() {
     console.log(this.warehouseForm.value);
     if (this.selectedRow) {
-      this.appService.updateOutlet({
+      this.appService.updateWarehouse({
         ...this.warehouseForm.value,
         'id': this.selectedRow.warehouse_id,
       }).subscribe((data: any) => {
         console.log('Data successfully added!');
-        this.toggleSideNav.emit();
+        this.toggleSideNav.emit('added');
       })
     } else {
-      this.appService.addOutlet(this.warehouseForm.value).subscribe((data: any) => {
-        if (data.values.success) {
-          console.log('Data successfully added!');
-          this.toggleSideNav.emit();
-        }
+      this.appService.addWarehouse(this.warehouseForm.value).subscribe((data: any) => {
+        console.log('Data successfully added!');
+        this.toggleSideNav.emit('added');
       })
     }
     // this.appService.addOrder()

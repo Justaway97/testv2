@@ -10,6 +10,8 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
+import { FilterDialogComponent } from '../filter-dialog/filter-dialog.component';
+import { isMobile } from '../app.constant';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +20,7 @@ import { cloneDeep } from 'lodash';
 })
 export class HomeComponent implements OnInit {
   filterNav: string[] = [];
+  filterIconNav: string[] = [];
   itemList = [];
   searchOptions!: any[];
   isDataLoaded = false;
@@ -38,9 +41,11 @@ export class HomeComponent implements OnInit {
   tableSize: number;
   title: string = 'Item';
   checkBoxList: any[] = [];
+  statusData: any[] = [];
   
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild('rightDrawer', { static: false }) rightDrawer: MatDrawer;
+  @ViewChild('leftDrawer', { static: false }) leftDrawer: MatDrawer;
 
   constructor(
     private appService: AppService,
@@ -52,13 +57,16 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filterNav = ['Home', 'Item', 'Outlet', 'UserApproval', 'Order', 'Order', 'Warehouse'];
-    this.access = localStorage.getItem('access');
-    this.username = localStorage.getItem('id');
+    this.filterNav = ['Home', 'Item', 'Outlet', 'UserApproval', 'Order', 'Dashboard', 'Warehouse'];
+    this.filterIconNav = ['home', 'shop', 'store', 'supervisor_account', 'description', 'dashboard', 'storage'];
+    // this.access = localStorage.getItem('access');
+    // this.username = localStorage.getItem('id');
+    console.log(window.innerHeight, window.innerWidth);
     this.searchCriteria = {
       pageIndex: this.dataService.PAGE_INDEX,
       pageSize: this.dataService.PAGE_SIZE,
     }
+    this.getStatus();
     if (this.router.url === '/home') {
       this.title = 'Item';
       this.searchCriteria = {
@@ -87,13 +95,13 @@ export class HomeComponent implements OnInit {
       this.title = 'Approval';
       this.currentTable = 'approval';
       this.getApprovalUserList();
-    } else if (this.router.url === '/order/warehouse') {
-      this.title = 'Order';
+    } else if (this.router.url === '/dashboard') {
+      this.title = 'dashboard';
       this.searchCriteria = {
         ...this.searchCriteria,
         orderBy: ['target_received_date']
       };
-      this.currentTable = 'order/warehouse';
+      this.currentTable = 'dashboard';
       this.getOrderWarehouseList();
     } else if (this.router.url === '/warehouse') {
       this.title = 'Warehouse';
@@ -215,16 +223,24 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  closeRightSideNav() {
+  closeRightSideNav(event: any) {
+    console.log(event);
     this.rightDrawer.close();
     this.selectedRow = null;
     this.isAddAction = false;
     this.isUpdateAction = false;
+    if(event === 'added') {
+      this.ngOnInit();
+    }
+    if (!this.isMobileView()) {
+      this.leftDrawer.disableClose = true;
+    }
   }
 
   toggleAddPanel() {
     this.isAddAction = true;
     this.selectedRow = null;
+    console.log(this.currentTable);
     this.rightDrawer.toggle();
   }
 
@@ -308,12 +324,27 @@ export class HomeComponent implements OnInit {
 
   formatOrderList(values: any[]) {
     values.forEach((element: any) => {
-      let d = new Date( element.order_date );
-      delete element.order_date;
-      element.order_by = d.getHours() + ':' + d.getMinutes() + ' ' + (d.getHours()<12?'AM': 'PM') + ', ' + d.toLocaleDateString() + ' (' + element.order_by + ')';
-      d = new Date( element.arrived_date );
-      element.arrived_date = d.getHours() + ':' + d.getMinutes() + ' ' + (d.getHours()<12?'AM': 'PM') + ', ' + d.toLocaleDateString();
-      element.target_received_date = new Date( element.target_received_date ).toLocaleDateString();
+      // timestamp required to multiply 1000 to get the actual timestamp
+      if (element.order_date) {
+        let d = new Date( element.order_date * 1000 );
+        console.log(element.order_date, d, 'test');
+        delete element.order_date;
+        element.order_by = d.getHours() + ':' + d.getMinutes() + ' ' + (d.getHours()<12?'AM': 'PM') + ', ' + d.toLocaleDateString() + ' (' + element.order_by + ')';  
+      } else {
+        element.order_by = null;
+      }
+      if (element.arrived_date) {
+        let d = new Date( element.arrived_date * 1000 );
+        element.arrived_date = d.getHours() + ':' + d.getMinutes() + ' ' + (d.getHours()<12?'AM': 'PM') + ', ' + d.toLocaleDateString();
+      } else {
+        element.arrived_date = '-';
+      }
+      if (element.target_received_date) {
+        let d = new Date( element.target_received_date * 1000 );
+        element.target_received_date = d.toLocaleDateString();
+      } else {
+        element.target_received_date = null;
+      }
     });
     return values as never[];
   }
@@ -332,8 +363,8 @@ export class HomeComponent implements OnInit {
     if (this.router.url === '/approval/user') {
       this.getApprovalUserList();
     }
-    if (this.router.url === '/order/warehouse') {
-      this.getOrderList();
+    if (this.router.url === '/dashboard') {
+      this.getOrderWarehouseList();
     }
   }
 
@@ -347,7 +378,7 @@ export class HomeComponent implements OnInit {
   }
 
   approval(action: any) {
-    this.appService.userApproval({ usernames: this.checkBoxList, action:action, approveBy: localStorage.getItem('id')}).subscribe((data: any) => {
+    this.appService.userApproval({ usernames: this.checkBoxList, action:action, approveBy: sessionStorage.getItem('id')}).subscribe((data: any) => {
       console.log('done approval');
     }, error => {
       const dialogRef = this.dialog.open(DialogComponent, {
@@ -360,6 +391,44 @@ export class HomeComponent implements OnInit {
 
   getNav(nav: string) {
     return nav.toLowerCase();
+  }
+
+  openFilterDialog() {
+    this.dialog.open(FilterDialogComponent, {
+      data : {
+        field: ['Item Name', 'Quantity', 'Package', 'Remark'],
+        dataType: ['text','number','text','longText'],
+      },
+      width: '80%',
+    });
+  }
+
+  isMobileView() {
+    console.log(isMobile.width, window.innerWidth <= isMobile.width, window.innerWidth);
+    return window.innerWidth <= isMobile.width;
+  }
+
+  getStatus() {
+    this.appService.getOrderStatus(sessionStorage.getItem('id')).subscribe((data: any) => {
+      const values = data.values;
+      for (const v of values) {
+        this.statusData.push({
+          header2: v.title ? v.title : null,
+          footer1: v.value ? v.value : null,
+          color: 'grey',
+          cols: 5,
+          rows: 1,
+          header1: v.title1 ? v.title1 : null,
+          footer2: v.value1 ? v.value1 : null,
+        })
+      }
+    }, error => {
+      const dialogRef = this.dialog.open(DialogComponent, {
+                          data       : {
+                            message: error.error.error,
+                          },
+                        });
+    });
   }
 }
 

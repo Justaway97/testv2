@@ -1,0 +1,35 @@
+<!-- <mat-dialog-content class="mat-typography">
+    <p>{{ data.message }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button mat-raised-button color="primary" (click)="onConfirmClick()" tabindex="1">Yes</button>
+</mat-dialog-actions> -->
+<ng-container *ngIf="data">
+    <h2>Filter By</h2>
+    <div style="display:flex;flex-direction: column;" mat-dialog-content>
+        <ng-container *ngFor="let d of data.field;let i = index">
+        <div style="display:flex;align-items: center;width:100%;flex-direction: row;">
+            <p>{{ d }}</p>
+            <ng-template [ngTemplateOutlet]="filter"></ng-template>
+            <div class="example-spacer" style="gap: 4%;">
+                <mat-button-toggle-group [(ngModel)]="searchCriteria[i]">
+                    <mat-button-toggle value="asc">asc</mat-button-toggle>
+                    <mat-button-toggle value="desc">desc</mat-button-toggle>
+                </mat-button-toggle-group>
+                <mat-icon class="close" (click)="clear(i)">close</mat-icon>
+            </div>
+          </div></ng-container>
+  </div>
+  <div class="example-spacer" mat-dialog-actions>
+	<button mat-raised-button color="primary" tabindex="1">Yes</button>
+  </div>
+
+<!-- add new icon -->
+<ng-template #filter let-filter>
+  <ng-container *ngIf="filter.dataType === 'text'">
+    <mat-form-field>
+      <input matInput [placeholder]="filter.field" [value]="searchForm.getRawValue()?.item_name" formControlName="item_name">
+    </mat-form-field>
+  </ng-container>
+</ng-template>
+</ng-container>

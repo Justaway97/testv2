@@ -36,6 +36,10 @@ import { UserApprovalComponent } from './user-approval/user-approval.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { WarehouseComponent } from './warehouse/warehouse.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { SpanBoxComponent } from './span-box/span-box.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +55,9 @@ import { WarehouseComponent } from './warehouse/warehouse.component';
     OutletDetailComponent,
     UserApprovalComponent,
     WarehouseComponent,
+    DashboardComponent,
+    FilterDialogComponent,
+    SpanBoxComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -59,26 +66,27 @@ import { WarehouseComponent } from './warehouse/warehouse.component';
     MatButtonModule,
     FormsModule,
     HttpClientModule,
+    MatAutocompleteModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatDialogModule,
     MatFormFieldModule,
+    MatGridListModule,
     MatInputModule,
     MatIconModule,
     MatListModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatRadioModule,
+    MatSelectModule,
     MatSidenavModule,
+    MatSortModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
     ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatCardModule,
-    MatGridListModule,
-    MatDialogModule,
-    MatRadioModule,
-    MatCheckboxModule,
-    MatSortModule,
-    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

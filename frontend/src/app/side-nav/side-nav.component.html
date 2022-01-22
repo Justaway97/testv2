@@ -3,7 +3,10 @@
     <mat-card-content style="display:inline;">
         <div *ngFor="let d of data">
             <br>
-            <mat-label class="label white-color-text">{{ d.title }}</mat-label>
+            <mat-icon aria-hidden="false" aria-label="Example home icon">home</mat-icon>
+            <mat-label class="label white-color-text">
+                {{ d.title }}
+            </mat-label>
             <br>
             <br>
             <div class="row">

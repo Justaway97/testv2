@@ -48,4 +48,8 @@ export class CommonService {
             });
         });
     }
+
+    setHttpHeader() {
+        
+    }
 }

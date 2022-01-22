@@ -29,15 +29,15 @@ export class SideNavComponent implements OnInit {
   }
 
   getOrderBySearchCriteria() {
-    this.appService.getOrderStatistic(this.username).subscribe((data: any) => {
-      this.data = data.values;
-    }, error => {
-      const dialogRef = this.dialog.open(DialogComponent, {
-                          data       : {
-                            message: error.error.error,
-                          },
-                        });
-    });
+    // this.appService.getOrderStatistic(this.username).subscribe((data: any) => {
+    //   this.data = data.values;
+    // }, error => {
+    //   const dialogRef = this.dialog.open(DialogComponent, {
+    //                       data       : {
+    //                         message: error.error.error,
+    //                       },
+    //                     });
+    // });
   }
 
 }

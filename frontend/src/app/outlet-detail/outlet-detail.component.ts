@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 import { AppService } from '../services/app.service';
 
 @Component({
@@ -16,6 +18,7 @@ export class OutletDetailComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private appService: AppService,
+    private dialog: MatDialog,
   ) { 
   }
 
@@ -39,15 +42,25 @@ export class OutletDetailComponent implements OnInit {
         'id': this.selectedRow.outlet_id,
       }).subscribe((data: any) => {
         console.log('Data successfully added!');
-        this.toggleSideNav.emit();
-      })
+        this.toggleSideNav.emit('added');
+      }, error => {
+        const dialogRef = this.dialog.open(DialogComponent, {
+                            data       : {
+                              message: error.error.error,
+                            },
+                          });
+      });
     } else {
       this.appService.addOutlet(this.outletDetailForm.value).subscribe((data: any) => {
-        if (data.values.success) {
-          console.log('Data successfully added!');
-          this.toggleSideNav.emit();
-        }
-      })
+        console.log('Data successfully added!');
+        this.toggleSideNav.emit('added');
+      }, error => {
+        const dialogRef = this.dialog.open(DialogComponent, {
+                            data       : {
+                              message: error.error.error,
+                            },
+                          });
+      });
     }
     // this.appService.addOrder()
   }

@@ -226,48 +226,44 @@ def serialize_message(message):
     return res
 
 @require_GET
-def getOrderStatistic(request, user_id):
+def getStatus(request, user_id):
     # get order today
     today = datetime.datetime.now(tz=timezone.utc)
     orderToday = Order.objects.filter(order_by__id=user_id,
-                                      order_date__day=today.day,
                                       order_date__month=today.month,
                                       order_date__year=today.year).count()
     # get pending order to received today
     orderPending = Order.objects.filter(order_by__id=user_id,
-                                        order_completed=False,
-                                        target_received_date__day=today.day,
-                                        target_received_date__month=today.month,
-                                        target_received_date__year=today.year).count()
+                                        order_status='P').count()
     # get order received today
     orderReceived = Order.objects.filter(order_by__id=user_id,
-                                        order_completed=True,
-                                        arrived_date__day=today.day,
-                                        arrived_date__month=today.month,
-                                        arrived_date__year=today.year).count()
-    # get order delay
-    orderDelay = Order.objects.filter(order_by__id=user_id,
-                                      delay_day__gte=0,
-                                      order_completed=False).count()
+                                         order_status='C',
+                                         arrived_date__day=today.day,
+                                         arrived_date__month=today.month,
+                                         arrived_date__year=today.year).count()
+    # # get order delay
+    # orderDelay = Order.objects.filter(order_by__id=user_id,
+    #                                   delay_day__gte=0).count()
     res = [
       {
-        'title': 'Order Today',
-        'value': orderToday,
+        'title': 'Order',
+        'value': str(orderToday),
       },
       {
-        'title': 'Order Pending To Reach Today',
-        'value': orderPending,
+        'title': 'Pending',
+        'value': str(orderPending),
       },
       {
-        'title': 'Order Received Today',
-        'value': orderReceived,
+        'title': 'Received',
+        'value': str(orderReceived),
       },
-      {
-        'title': 'Order Delay',
-        'value': orderDelay,
-      },
+    #   {
+    #     'title': 'Order Delay',
+    #     'value': orderDelay,
+    #   },
     ]
-    if orderToday >= 0 and orderPending >= 0 and orderReceived >= 0 and orderDelay >= 0:
+    print(res)
+    if orderToday >= 0 and orderPending >= 0 and orderReceived >= 0:
         return JsonResponse({'values': res }, status=200)
     return JsonResponse({}, status=404)
 

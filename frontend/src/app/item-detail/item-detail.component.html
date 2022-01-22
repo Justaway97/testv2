@@ -4,7 +4,7 @@
             <mat-card-title class="col">Add New Item</mat-card-title>
             <div class="test-card">
                 <mat-card-title class="col">
-                    <mat-icon class="close" (click)="toggleSideNav.emit()">close</mat-icon>
+                    <mat-icon class="close" (click)="toggleSideNav.emit('close')">close</mat-icon>
                 </mat-card-title>
             </div>
         </div>
@@ -33,6 +33,8 @@
                         <input matInput placeholder="Quantity" [value]="itemDetailForm.getRawValue()?.quantity" formControlName="quantity">
                     </mat-form-field>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col marginLeftRight">
                     <mat-form-field class="full-width">
                         <input matInput placeholder="Package" [value]="itemDetailForm.getRawValue()?.package" formControlName="package">

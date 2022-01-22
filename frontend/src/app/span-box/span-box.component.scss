@@ -1,0 +1,25 @@
+.header1 {
+    font-size: 2em;
+}
+
+.header2 {
+    font-size: 1em;
+}
+
+.footer1 {
+    font-size: 2em;
+}
+
+.footer2 {
+    font-size: 1em;
+}
+
+mat-grid-tile-header, mat-grid-tile-footer {
+    justify-content: center;
+}
+
+mat-grid-tile {
+    border: solid 0.5em #000;
+}
+
+
