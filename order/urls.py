@@ -5,7 +5,7 @@ from order.views.web.user import isLoggedIn, register, userLogin, getStatus, get
 from order.views.web.order import getOrderList, getOrder, addOrder, getOrderWarehouse, manageOrder, getOrder2List, addOrder2, getOrderDetailList, getDashboard2List
 from order.views.web.outlet import getOutletList, manageOutlet, getOptionOutletList, addOutlet
 from order.views.web.item import addItem, getItemList, getOptionItemList, manageItem
-from order.views.web.warehouse import getOptionWarehouseList, getWarehouseList, manageWarehouse, addWarehouse
+# from order.views.web.warehouse import getOptionWarehouseList, getWarehouseList, manageWarehouse, addWarehouse
 
 # pylint: disable=unused-argument
 def index(request, **kwargs):
@@ -29,12 +29,12 @@ urlpatterns = [
     path(r'approval/user', getApprovalUser),
     path(r'option/item', getOptionItemList),
     path(r'option/outlet', getOptionOutletList),
-    path(r'warehouse', addWarehouse),
-    path(r'option/warehouse', getOptionWarehouseList),
+    # path(r'warehouse', addWarehouse),
+    # path(r'option/warehouse', getOptionWarehouseList),
     path(r'status/<str:user_id>', getStatus),
     path(r'user', manageUser),
-    path(r'warehouseList', getWarehouseList),
-    path(r'warehouse/<str:warehouse_id>', manageWarehouse),
+    # path(r'warehouseList', getWarehouseList),
+    # path(r'warehouse/<str:warehouse_id>', manageWarehouse),
     path(r'logout', logOut),
     path(r'order2/<str:order_id>', manageOrder),
     path(r'order2', addOrder2),

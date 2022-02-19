@@ -6,7 +6,7 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 from django.views.decorators.csrf import csrf_exempt
 from core.settings import MEDIA_ROOT, MEDIA_URL
 from django.contrib.auth import login, logout, authenticate
-from order.models import DatabaseLock, Order, Warehouse
+from order.models import DatabaseLock, Order
 from datetime import timezone
 import os
 import jwt, datetime

@@ -4,20 +4,6 @@ from django.db import models
 
 import uuid
 
-class Warehouse(models.Model):
-    warehouse_name = models.CharField(max_length=200)
-    warehouse_address = models.CharField(max_length=300)
-
-    def updateState(self, data):
-        if 'warehouse_name' in data:
-            self.warehouse_name = data['warehouse_name']
-        if 'warehouse_address' in data:
-            self.warehouse_address = data['warehouse_address']
-        super().save()
-
-    def __str__(self):
-        return self.warehouse_name
-
 class Outlet(models.Model):
     outlet_name = models.CharField(max_length=200)
     outlet_address = models.CharField(max_length=300)
@@ -69,7 +55,7 @@ class Order(models.Model):
     arrived_date = models.DateTimeField(null=True)
     order_status = models.CharField(max_length=100,default='P')
     remark = models.TextField(null=True)
-    warehouse_id = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
+    # warehouse_id = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
     # update to status, remove order_received or order completed, status use code -> completed, confirmed, sent, canceled
 
     def updateState(self, data):

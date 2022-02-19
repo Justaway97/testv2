@@ -9,7 +9,7 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 from django.core.mail import send_mail
 from core import settings
 
-from order.models import Item, Order, Order2, OrderDetail, Outlet, Warehouse
+from order.models import Item, Order, Order2, OrderDetail, Outlet
 from order.views.web.order_detail import addOrderDetail
 from order.views.web.serialize import serialize_order2, serialize_order_detail
 from order.views.web.shared import generate_error_response
@@ -43,7 +43,7 @@ def addOrder(request):
     # add new order
     data = json.loads(request.body)
     outlet = Outlet.objects.get(outlet_name = data['outlet_name'])
-    warehouse = Warehouse.objects.get(warehouse_name = data['warehouse_name'])
+    # warehouse = Warehouse.objects.get(warehouse_name = data['warehouse_name'])
     user = User.objects.get(id = data['order_by'])
     item = Item.objects.get(item_name = data['item_name'])
     new_order = Order(item_id=item,
@@ -54,7 +54,8 @@ def addOrder(request):
                     outlet_id=outlet,
                  order_status=data['order_status'],
                        remark=data['remark'],
-                 warehouse_id=warehouse)
+                #  warehouse_id=warehouse
+                 )
     new_order.save()
     return JsonResponse({}, status=200)
 
