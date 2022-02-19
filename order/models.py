@@ -131,6 +131,7 @@ class Order2(models.Model):
     remark = models.TextField(null=True)
     outlet_id = models.ForeignKey(Outlet, on_delete=models.PROTECT)
     status = models.CharField(max_length=100, default='P')
+    fake_col = models.CharField(max_length=100, default='P')
 
     def __str__(self):
         return str(self.pk)
@@ -155,6 +156,7 @@ class OrderDetail(models.Model):
     item_id = models.ForeignKey(Item, on_delete=models.PROTECT)
     quantity = models.IntegerField(default=0)
     status = models.CharField(max_length=100)
+    fake_col = models.CharField(max_length=100, default='P')
 
     def __str__(self):
         return str(self.pk)
