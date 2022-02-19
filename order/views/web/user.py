@@ -6,7 +6,7 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 from django.views.decorators.csrf import csrf_exempt
 from core.settings import MEDIA_ROOT, MEDIA_URL
 from django.contrib.auth import login, logout, authenticate
-from order.models import MessageTable, DatabaseLock, Order, Warehouse
+from order.models import DatabaseLock, Order, Warehouse
 from datetime import timezone
 import os
 import jwt, datetime
@@ -283,7 +283,3 @@ def logOut(request):
     response.delete_cookie('csrftoken')
     return response
 
-@require_GET
-def getMessage(request):
-    messages = MessageTable.objects.all()
-    return JsonResponse({'values': [serialize_message(x) for x in messages]}, status=200)

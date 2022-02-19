@@ -124,13 +124,6 @@ class Token(models.Model):
     def __str__(self):
         return str(self.token_name)
 
-class MessageTable(models.Model):
-    message_name = models.CharField(max_length=200)
-    message_description = models.CharField(max_length=300)
-
-    def __str__(self):
-        return str(self.message_name)
-
 class Order2(models.Model):
     order_date = models.DateField()
     order_by = models.ForeignKey(User, on_delete=models.PROTECT)

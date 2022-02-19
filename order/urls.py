@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls.conf import path, re_path
 
-from order.views.web.user import isLoggedIn, register, userLogin, getStatus, getApprovalUser, getMessage, logOut, manageUser
+from order.views.web.user import isLoggedIn, register, userLogin, getStatus, getApprovalUser, logOut, manageUser
 from order.views.web.order import getOrderList, getOrder, addOrder, getOrderWarehouse, manageOrder, getOrder2List, addOrder2, getOrderDetailList, getDashboard2List
 from order.views.web.outlet import getOutletList, manageOutlet, getOptionOutletList, addOutlet
 from order.views.web.item import addItem, getItemList, getOptionItemList, manageItem
@@ -35,7 +35,6 @@ urlpatterns = [
     path(r'user', manageUser),
     path(r'warehouseList', getWarehouseList),
     path(r'warehouse/<str:warehouse_id>', manageWarehouse),
-    path(r'message', getMessage),
     path(r'logout', logOut),
     path(r'order2/<str:order_id>', manageOrder),
     path(r'order2', addOrder2),
