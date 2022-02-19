@@ -44,18 +44,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Order2',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('order_date', models.DateField()),
-                ('received_date', models.DateField()),
-                ('remark', models.TextField(null=True)),
-                ('status', models.CharField(default='P', max_length=100)),
-                ('fake_col', models.CharField(default='P', max_length=100)),
-                ('order_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Outlet',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -91,10 +79,18 @@ class Migration(migrations.Migration):
                 ('order2_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='order.order2')),
             ],
         ),
-        migrations.AddField(
-            model_name='order2',
-            name='outlet_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='order.outlet'),
+        migrations.CreateModel(
+            name='Order2',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('order_date', models.DateField()),
+                ('received_date', models.DateField()),
+                ('remark', models.TextField(null=True)),
+                ('status', models.CharField(default='P', max_length=100)),
+                ('fake_col', models.CharField(default='P', max_length=100)),
+                ('order_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                ('outlet_id', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='order.outlet')),
+            ],
         ),
         migrations.CreateModel(
             name='Order',
