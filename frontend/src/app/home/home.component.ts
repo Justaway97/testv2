@@ -11,7 +11,8 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import { FilterDialogComponent } from '../filter-dialog/filter-dialog.component';
-import { isMobile } from '../app.constant';
+import { isMobile, message, status } from '../app.constant';
+import { header } from '../order2/order2.component.constant';
 
 @Component({
   selector: 'app-home',
@@ -35,17 +36,18 @@ export class HomeComponent implements OnInit {
   isAddAction = false;
   isUpdateAction = false;
   searchCriteria: any;
-  currentTable: string;
+  currentTable: string | null;
   username: string | null;
   approvalCheckBoxButtonList: any[];
   tableSize: number;
   title: string = 'Item';
   checkBoxList: any[] = [];
   statusData: any[] = [];
+  order2List = [];
   
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild('rightDrawer', { static: false }) rightDrawer: MatDrawer;
   @ViewChild('leftDrawer', { static: false }) leftDrawer: MatDrawer;
+  header: string[];
 
   constructor(
     private appService: AppService,
@@ -57,11 +59,12 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filterNav = ['Home', 'Item', 'Outlet', 'UserApproval', 'Order', 'Dashboard', 'Warehouse'];
-    this.filterIconNav = ['home', 'shop', 'store', 'supervisor_account', 'description', 'dashboard', 'storage'];
+    this.filterNav = ['Home', 'Item', 'Outlet', 'UserApproval', 'Order', 'Dashboard', 'Warehouse',
+    'Order2', 'Dashboard2', 'Outlet2'];
+    this.filterIconNav = ['home', 'shop', 'store', 'supervisor_account', 'description', 'dashboard',
+    'storage', 'description', 'dashboard', 'store'];
     // this.access = localStorage.getItem('access');
     // this.username = localStorage.getItem('id');
-    console.log(window.innerHeight, window.innerWidth);
     this.searchCriteria = {
       pageIndex: this.dataService.PAGE_INDEX,
       pageSize: this.dataService.PAGE_SIZE,
@@ -111,7 +114,61 @@ export class HomeComponent implements OnInit {
       };
       this.currentTable = 'warehouse';
       this.getWarehouseList();
+    } else if (this.router.url === '/order2') {
+      // const state$ = this.route.paramMap
+      // .pipe(map(() => window.history.state))
+      // console.log(state$, 'songming');
+      // this.header = header;
+      // this.title = 'Order2';
+      // this.searchCriteria = {
+      //   ...this.searchCriteria,
+      //   orderBy: ['received_date'],
+      //   findBy: 'outlet_id',
+      // };
+      // this.currentTable = 'order2';
+      // this.getOrder2List();
+    } else if (this.router.url === '/dashboard2') {
+      this.header = header;
+      this.title = 'Dashboard2';
+      this.searchCriteria = {
+        ...this.searchCriteria,
+        orderBy: ['received_date'],
+        findBy: null
+      };
+      this.currentTable = 'dashboard2';
+      this.getDashboard2List();
     }
+  }
+
+  getDashboard2List() {
+    this.appService.getDashboard2List(this.searchCriteria).subscribe((data: any) => {
+      this.order2List = data.values;
+      this.tableSize = data.size;
+    }, error => {
+      const dialogRef = this.dialog.open(DialogComponent, {
+                          data       : {
+                            message: error.error.error,
+                          },
+                        });
+    }).add(() => {
+      this.isDataLoaded = true;
+    });
+  }
+
+  getOrder2List() {
+    this.appService.getOrder2List(this.findBy(), this.searchCriteria).subscribe((data: any) => {
+      this.order2List = data.values;
+      console.log(this.order2List);
+      this.tableSize = data.size;
+    }, error => {
+      const dialogRef = this.dialog.open(DialogComponent, {
+                          data       : {
+                            message: error.error.error,
+                          },
+                        });
+    }).add(() => {
+      this.isDataLoaded = true;
+    });
   }
 
   getWarehouseList() {
@@ -172,6 +229,26 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  reload() {
+    this.currentTable = 'order2';
+    this.toggleUpdatePanel();
+  }
+
+  goToOrder2(event: any) {
+    this.selectedRow = event;
+    console.log(event);
+    this.searchCriteria = {
+      ...this.searchCriteria,
+      orderBy: ['received_date'],
+      findBy: 'outlet_id',
+    };
+    this.isDataLoaded = false;
+    this.currentTable = 'order2';
+    this.header = header;
+    this.title = 'Order2';
+    this.getOrder2List();
+  }
+
   goToOrder(event: any) {
     if (this.router.url !== '/order') {
       this.isDataLoaded = false;
@@ -193,11 +270,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  goToOutlet(event: any) {
-    if (this.router.url !== '/outlet') {
-      this.isDataLoaded = false;
-      this.router.navigateByUrl(Url.getOutletURL());
-    }
+  goToOutlet() {
+    this.router.navigateByUrl(Url.getOutletURL());
   }
 
   goToOrderWarehouse(event: any) {
@@ -223,25 +297,45 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  closeRightSideNav(event: any) {
-    console.log(event);
-    this.rightDrawer.close();
-    this.selectedRow = null;
-    this.isAddAction = false;
-    this.isUpdateAction = false;
-    if(event === 'added') {
-      this.ngOnInit();
-    }
-    if (!this.isMobileView()) {
-      this.leftDrawer.disableClose = true;
+  toggleAddPanel() {
+    if (this.currentTable !== 'order2') {
+      this.isAddAction = true;
+      this.selectedRow = null;
+    } else {
+      this.currentTable = null;
+      this.selectedRow = {
+        outlet_id: this.selectedRow.outlet_id,
+        outlet_name: this.selectedRow.outlet_name,
+      };
     }
   }
+  
+  getMessage(key: any) {
+    return message[key]? message[key]: key;
+  }
 
-  toggleAddPanel() {
-    this.isAddAction = true;
-    this.selectedRow = null;
-    console.log(this.currentTable);
-    this.rightDrawer.toggle();
+  updateStatus(event: any) {
+    const order2 = cloneDeep(event.value);
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data       : {
+        message: 'Are u want to update the status from '.concat(message[order2.status], ' to ', message[status[order2.status]], ' ?'),
+      },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        order2.status = status[order2.status];
+        this.appService.updateOrder2(order2, order2.order_id).subscribe((data: any) => {
+          console.log(data); 
+        }, error => {
+                const dialogRef = this.dialog.open(DialogComponent, {
+                              data       : {
+                                message: error.error.error,
+                              },
+                            });
+        });
+      }
+      this.router.navigateByUrl(Url.getOrder2URL());
+    });
   }
 
   toggleOrderDetailPanel(row: any) {
@@ -256,7 +350,6 @@ export class HomeComponent implements OnInit {
 
   toggleApprovalUserPanel(row: any) {
     this.selectedRow = row;
-    this.rightDrawer.toggle();
   }
 
   toggleWarehousePanel(row: any) {
@@ -269,7 +362,7 @@ export class HomeComponent implements OnInit {
       this.appService.getItem(this.selectedRow.item_id).subscribe((data: any) => {
         this.selectedRow = data.values;
         this.isUpdateAction = true;
-        this.rightDrawer.toggle();
+        // this.rightDrawer.toggle();
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
@@ -283,7 +376,7 @@ export class HomeComponent implements OnInit {
       this.appService.getOutlet(this.selectedRow.outlet_id).subscribe((data: any) => {
         this.selectedRow = data.values;
         this.isUpdateAction = true;
-        this.rightDrawer.toggle();
+        // this.rightDrawer.toggle();
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
@@ -297,7 +390,7 @@ export class HomeComponent implements OnInit {
       this.appService.getOrder(this.selectedRow.order_id).subscribe((data: any) => {
         this.selectedRow = cloneDeep(data.values);
         this.isUpdateAction = true;
-        this.rightDrawer.toggle();
+        // this.rightDrawer.toggle();
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
@@ -311,7 +404,7 @@ export class HomeComponent implements OnInit {
       this.appService.getWarehouse(this.selectedRow.warehouse_id).subscribe((data: any) => {
         this.selectedRow = cloneDeep(data.values);
         this.isUpdateAction = true;
-        this.rightDrawer.toggle();
+        // this.rightDrawer.toggle();
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
@@ -320,6 +413,26 @@ export class HomeComponent implements OnInit {
                           });
       });
     }
+    if (this.currentTable === 'order2') {
+      // standardize all id
+      this.appService.getOrder2(this.selectedRow.order_id).subscribe((data: any) => {
+        this.selectedRow = cloneDeep(data.values);
+      }, error => {
+        const dialogRef = this.dialog.open(DialogComponent, {
+                            data       : {
+                              message: error.error.error,
+                            },
+                          });
+      }).add(() => {
+        this.title = 'Order2 Detail';
+        this.currentTable = null;
+      });
+    }
+  }
+
+  toggleOrder2DetailPanel(row: any) {
+    this.selectedRow = row;
+    this.toggleUpdatePanel();
   }
 
   formatOrderList(values: any[]) {
@@ -327,7 +440,6 @@ export class HomeComponent implements OnInit {
       // timestamp required to multiply 1000 to get the actual timestamp
       if (element.order_date) {
         let d = new Date( element.order_date * 1000 );
-        console.log(element.order_date, d, 'test');
         delete element.order_date;
         element.order_by = d.getHours() + ':' + d.getMinutes() + ' ' + (d.getHours()<12?'AM': 'PM') + ', ' + d.toLocaleDateString() + ' (' + element.order_by + ')';  
       } else {
@@ -379,7 +491,6 @@ export class HomeComponent implements OnInit {
 
   approval(action: any) {
     this.appService.userApproval({ usernames: this.checkBoxList, action:action, approveBy: sessionStorage.getItem('id')}).subscribe((data: any) => {
-      console.log('done approval');
     }, error => {
       const dialogRef = this.dialog.open(DialogComponent, {
                           data       : {
@@ -404,7 +515,6 @@ export class HomeComponent implements OnInit {
   }
 
   isMobileView() {
-    console.log(isMobile.width, window.innerWidth <= isMobile.width, window.innerWidth);
     return window.innerWidth <= isMobile.width;
   }
 
@@ -429,6 +539,16 @@ export class HomeComponent implements OnInit {
                           },
                         });
     });
+  }
+
+  findBy() {
+    if (this.searchCriteria?.findBy) {
+      if (this.searchCriteria.findBy === 'user_id') {
+        return sessionStorage.getItem('id');
+      }
+      return this.selectedRow[this.searchCriteria.findBy];
+    }
+    return null;
   }
 }
 

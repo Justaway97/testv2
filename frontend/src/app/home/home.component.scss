@@ -18,6 +18,11 @@ mat-drawer-container {
     background-color: #f4f4f4;
 }
 
+.not-mobile {
+    display: flex;
+    justify-content: center;
+}
+
 // th, td {
 //   text-align: center;
 // }
@@ -35,4 +40,12 @@ footer {
     /* Height of the footer*/ 
     height: 40px;
     background: grey;
+}
+
+.half-width {
+    width: 50%;
+}
+
+.block {
+    display: block;
 }

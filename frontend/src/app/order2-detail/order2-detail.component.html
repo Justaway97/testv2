@@ -1,0 +1,106 @@
+<ng-container *ngIf="isDataLoaded">
+  <form [formGroup]="form" novalidate style="height: 100%;">
+    <mat-card class="card">
+      <div class="row title">
+        <mat-icon class="pointer" (click)="routeToOrder2()">arrow_back</mat-icon>
+        <mat-card-title>
+            {{ getTitle() }}
+          </mat-card-title>
+          </div>
+          <mat-card-content>
+            <div class="row">
+              <div class="col-1">
+                <span>
+                  You are ordering for {{ this.selectedRow.outlet_name }}
+                </span>
+              </div>
+            </div>
+            <br>
+            <table>
+              <tr>
+                <th class="item" >Item</th>
+                <th class="quan">Quantity</th>
+                <th class="status">Completed?</th>
+                <th class="remove"></th>
+              </tr>
+              <tr formArrayName="order_detail" *ngFor="let detail of orderDetails.controls; let i = index;">
+                    <!-- <div class="row"> -->
+                      <td class="padding-table" [formGroupName]="i">
+                      <!-- <div class="col-3"> -->
+                        <mat-form-field class="full-width">
+                          <mat-select formControlName="item_id">
+                            <mat-option *ngFor="let itemName of options.itemNameOptionList" [value]="itemName.id">
+                              {{itemName.item_name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      <!-- </div> -->
+                      </td>
+                      <td class="padding-table" [formGroupName]="i">
+                        <div class="quantity-column">
+                      <!-- <div class="col-2"> -->
+                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, -1)">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+                          <input class="quantity" id="quantity" type="number" min="0" formControlName="quantity">
+                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, 1)">
+                            <mat-icon>add</mat-icon>
+                          </button>
+                        </div>
+                      <!-- </div> -->
+                      </td>
+                      <!-- <ng-container *ngIf="selectedRow?.status === 'P' || selectedRow?.status === 'NC'">
+                        <mat-button-toggle-group formControlName="status" aria-label="Font Style">
+                          <mat-button-toggle value="P">Pending</mat-button-toggle>
+                          <mat-button-toggle value="C">Completed</mat-button-toggle>
+                        </mat-button-toggle-group>
+                      </ng-container> -->
+                      <td class="padding-table" [formGroupName]="i">
+                      <mat-checkbox color="primary" formControlName="status"></mat-checkbox>
+                      </td>
+                      <td class="padding-table">
+                      <ng-container *ngIf="!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'NC'">
+                        <div class="col-1">
+                          <mat-icon class="pointer" (click)="removeItem(i)">delete</mat-icon>
+                        </div>
+                      </ng-container>
+                      </td>
+                    <!-- </div> -->
+                  <!-- </div> -->
+                <!-- </ng-container> -->
+              </tr>
+            </table>
+            <br>
+            <ng-container *ngIf="!selectedRow?.status || selectedRow?.status === 'P'">
+              <div class="row">
+                <div class="col-1">
+                  <button class="add-item" type="button" mat-raised-button color="accent" (click)="addItem()">Add More Item</button>
+                </div>
+              </div>
+            </ng-container>
+            <br>
+            <div class="row">
+              <div class="col-1">
+                <mat-form-field appearance="fill">
+                  <mat-label>Target Received Date</mat-label>
+                  <input matInput formControlName="received_date" [matDatepicker]="pickerTargetReceivedDate">
+                  <mat-datepicker-toggle matSuffix [for]="pickerTargetReceivedDate"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTargetReceivedDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-1">
+                <mat-form-field class="full-width">
+                  <textarea matInput placeholder="Remark" [value]="form.getRawValue()?.remark" formControlName="remark"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+            </mat-card-content>
+            <mat-card-actions class="col-1">
+              <button mat-raised-button color="primary" type="submit" [disabled]="!form.dirty" (click)="submit()">Submit</button>
+              <button mat-raised-button color="warn" type="button" (click)="reset()">Reset</button>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+  </ng-container>

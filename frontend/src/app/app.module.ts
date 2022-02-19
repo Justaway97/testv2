@@ -40,6 +40,10 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SpanBoxComponent } from './span-box/span-box.component';
+import { Order2Component } from './order2/order2.component';
+import { Order2DetailComponent } from './order2-detail/order2-detail.component';
+import { Dashboard2Component } from './dashboard2/dashboard2.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -58,6 +62,9 @@ import { SpanBoxComponent } from './span-box/span-box.component';
     DashboardComponent,
     FilterDialogComponent,
     SpanBoxComponent,
+    Order2Component,
+    Order2DetailComponent,
+    Dashboard2Component,
   ],
   imports: [
     AppRoutingModule,
@@ -88,7 +95,7 @@ import { SpanBoxComponent } from './span-box/span-box.component';
     MatToolbarModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

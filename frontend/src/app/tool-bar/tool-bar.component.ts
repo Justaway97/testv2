@@ -62,7 +62,6 @@ export class ToolBarComponent implements OnInit, OnChanges {
   // };
 
   ngOnInit(): void {
-    console.log(this.colourSelection);
     if (this.colourSelection === 'primary') {
       this.flag = true;
     }

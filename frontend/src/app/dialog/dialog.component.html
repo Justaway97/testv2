@@ -2,5 +2,6 @@
     <p>{{ data.message }}</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-	<button mat-raised-button color="primary" (click)="onConfirmClick()" tabindex="1">Yes</button>
+	<button mat-raised-button color="primary" (click)="dialog.close(false)" tabindex="1">No</button>
+	<button mat-raised-button color="primary" (click)="dialog.close(true)" tabindex="1">Yes</button>
 </mat-dialog-actions>

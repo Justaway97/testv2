@@ -93,8 +93,9 @@ def register(request):
     if user:
         return generate_error_response('User is exist', status=404)
     new_user = User(username=data['username'],
-               is_active=False)
-    print(data, request.POST)
+                    email=data['email'],
+                    is_active=False)
+    print(data, request.POST, 'songming')
     new_user.set_password(data['password'])
     new_user.save()
     return JsonResponse({}, status=200)

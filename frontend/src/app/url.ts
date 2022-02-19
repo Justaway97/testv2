@@ -32,4 +32,13 @@ export abstract class Url {
     public static getOrderWarehouseURL(): string {
         return 'order/warehouse';
     }
+    public static getOrder2URL(): string {
+        return 'order2';
+    }
+    static getDashboard2URL(): string {
+        return 'dashboard2';
+    }
+    static getOutlet2URL(): string {
+        return 'outlet2';
+    }
 }

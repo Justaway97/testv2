@@ -16,8 +16,9 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() editableField: any[];
   @Input() requiredCheckButton: Boolean;
   @Input() size: number;
+  @Input() header: string[];
 
-  @Output() checkButtonResult: any[];
+  @Output() checkBoxSelected = new EventEmitter();
   @Output() page = new EventEmitter();
   @Output() selectedRow = new EventEmitter();
   @Output() selectedCheckBox = new EventEmitter();
@@ -41,14 +42,12 @@ export class TableComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.dataSource = new MatTableDataSource(this.tableData);
     this.columns = [];
-    // if (this.dataSource.data.length > 0) {
-    if (this.requiredCheckButton) {
-      this.columns.push('select');
-    }
-    console.log(this.dataSource);
-    if (this.dataSource.data.length > 0) {
+    if (this.header) {
+      this.columns = this.header;
+    } else if (this.dataSource.data.length > 0) {
       this.columns.push(...Object.keys(this.dataSource.data[0]));
     }
+    console.log(this.columns);
     // this.columns.forEach((x, i) => 
     //   this.columns[i] = message[x]? { key: x,
     //                                   value: message[x]}
@@ -62,9 +61,7 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   ngAfterViewInit() {
-    console.log(this.paginator?.pageIndex, 'haha');
     this.sort.sortChange.subscribe((event: any) => {
-      console.log(event, 'event');
       this.paginator.pageIndex = 0;
       this.page.emit({
         pageIndex: 0,
@@ -78,7 +75,6 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   getSelectedRow(row: any) {
-    console.log(row);
     this.selectedRow.emit(row);
   }
 
@@ -87,7 +83,6 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   getDate(data: any) {
-    console.log(new Date(data));
     return new Date(data);
   }
   // getFormElement(x: any) {
@@ -109,8 +104,12 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   onPaginateChange(event: any) {
-    console.log(event.pageIndex, event.pageSize);
     // this.paginator.pageIndex = event.pageIndex;
     this.page.emit({pageIndex: event.pageIndex, pageSize: event.pageSize});
+  }
+
+  onClickCheckBox(element: any) {
+    console.log(element);
+    this.checkBoxSelected.emit({value: element});
   }
 }

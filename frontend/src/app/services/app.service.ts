@@ -14,6 +14,7 @@ export class AppService {
     private static URL_OUTLET_LIST = '/outletList';
     private static URL_ORDER_LIST = '/orderList/<id>';
     private static URL_ORDER = '/order';
+    private static URL_ORDER2 = '/order2';
     private static URL_REGISTER = '/register';
     private static URL_ITEM = '/item';
     private static URL_PK = '/<id>';
@@ -26,6 +27,9 @@ export class AppService {
     private static URL_MESSAGE = '/message';
     private static URL_WAREHOUSE_LIST = '/warehouseList';
     private static URL_LOGOUT = '/logout';
+    private static URL_ORDER2_LIST = '/order2List/<id>';
+    private static URL_ORDER2_DETAIL = '/order2/<id>';
+    private static URL_DASHBOARD2 = '/dashboard2';
 
     constructor(
         private http: HttpClient,
@@ -69,6 +73,10 @@ export class AppService {
 
     addOrder(order: any): Observable<any> {
         return this.http.post(AppService.URL_HOME.concat(AppService.URL_ORDER), order, {withCredentials: true});
+    }
+
+    addOrder2(order: any): Observable<any> {
+        return this.http.post(AppService.URL_HOME.concat(AppService.URL_ORDER2), order, {withCredentials: true});
     }
 
     getOrder(id: any): Observable<any> {
@@ -216,6 +224,45 @@ export class AppService {
     getOrderStatus(id: any) {
         return this.http.get(
             AppService.URL_HOME.concat(AppService.URL_STATUS).concat(AppService.URL_PK.replace('<id>',id)),
+            {
+                withCredentials: true
+            }
+        );
+    }
+
+    getOrder2List(id: string, searchCriteria: any) {
+        return this.http.get(
+            AppService.URL_HOME.concat(AppService.URL_ORDER2_LIST.replace('<id>',id)), 
+            {
+                params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
+                withCredentials: true
+            }
+        );
+    }
+
+    getOrder2(id: string) {
+        return this.http.get(
+            AppService.URL_HOME.concat(AppService.URL_ORDER2_DETAIL.replace('<id>',id)), 
+            {
+                withCredentials: true
+            }
+        );
+    }
+
+    getDashboard2List(searchCriteria: any) {
+        return this.http.get(
+            AppService.URL_HOME.concat(AppService.URL_DASHBOARD2),
+            {
+                params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
+                withCredentials: true
+            }
+        );
+    }
+
+    updateOrder2(order: any, id: string) {
+        return this.http.post(
+            AppService.URL_HOME.concat(AppService.URL_ORDER2_DETAIL.replace('<id>',id)), 
+            order,
             {
                 withCredentials: true
             }

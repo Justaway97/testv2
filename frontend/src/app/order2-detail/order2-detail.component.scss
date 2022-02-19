@@ -1,0 +1,148 @@
+
+.pointer {
+    cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    margin-left: 1%;
+}
+
+.col-1 {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    margin-right: 3%;
+    margin-left: 3%;
+}
+
+.col-2 {
+    flex: 2 1 0;
+    display: flex;
+    align-items: center;
+    margin-right: 3%;
+    margin-left: 3%;
+}
+
+.col-3 {
+    flex: 3;
+    display: flex;
+    align-items: center;
+    margin-right: 3%;
+    margin-left: 3%;
+}
+
+.mat-icon {
+    vertical-align: middle;
+}
+
+.quantity {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1rem;
+}
+
+.quantity-column {
+    display: flex;
+    align-content: center;
+}
+
+::ng-deep {
+    mat-form-field {
+        div {
+            div {
+                div.mat-form-field-infix {
+                    width: inherit;
+                } 
+            }
+        }
+    }
+}
+
+.add-item {
+    margin-bottom: 3%;
+    margin-left: 1.5%;
+    margin-top: 1%;
+}
+
+mat-card-title {
+    margin-bottom: 0px;
+    margin-left: 1%;
+}
+
+.title {
+    margin-bottom: 3%;
+    margin-left: 0%;
+}
+
+::ng-deep {
+    mat-flat-button {
+        min-width: 0px;
+        min-height: 0px;
+    }
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-left: 5.5%;
+    border: 1px solid white;
+    -moz-box-shadow: 0 0 5px 5px #888;
+    -webkit-box-shadow: 0 0 5px 5px#888;
+    box-shadow: 0 0 5px 5px #888;
+}
+
+tr {
+    border-bottom: 1px solid rgb(253, 253, 253);
+}
+
+tr:nth-child(even) {
+    background-color: lightslategrey;
+}
+
+td {
+    text-align: center;
+}
+
+.item {
+    width:26%;
+}
+
+.quan {
+    width:30%;
+}
+
+.status {
+    width:15%;
+}
+
+.remove {
+    width:10%;
+}
+
+.padding-table {
+    padding-top: 1%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+span {
+    font-size: 1rem;
+}

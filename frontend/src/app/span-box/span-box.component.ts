@@ -31,7 +31,6 @@ export class SpanBoxComponent implements OnInit {
     for (const d of this.data) {
       this.totalCols += d.cols;
     }
-    console.log('cols ', this.totalCols, this.data);
   }
   // data = {
   //   header1:

@@ -49,10 +49,8 @@ def isItemExist(data, item_id = 0):
 @require_GET
 def getItemList(request):
     offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
-    print(offset)
     items = Item.objects.all().order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
     size = Item.objects.all().count()
-    print(items)
     return JsonResponse({'values': [serialize_item(x) for x in items], 'size': size}, status=200)
 
 @csrf_exempt

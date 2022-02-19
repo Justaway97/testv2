@@ -17,10 +17,13 @@ const routes: Routes = [
   { path: Url.getWarehouseURL(), component: HomeComponent },
   { path: Url.getDashboardURL(), component: HomeComponent },
   { path: Url.getUserApprovalURL(), redirectTo: Url.getApprovalURL(), pathMatch: 'full' },
+  { path: Url.getOrder2URL(), component: HomeComponent },
+  { path: Url.getDashboard2URL(), component: HomeComponent },
+  { path: Url.getOutlet2URL(), component: HomeComponent },
   { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

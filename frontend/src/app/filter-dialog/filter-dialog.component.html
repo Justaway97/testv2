@@ -10,14 +10,14 @@
         <ng-container *ngFor="let d of data.field;let i = index">
         <div style="display:flex;align-items: center;width:100%;flex-direction: row;">
             <p>{{ d }}</p>
-            <ng-template [ngTemplateOutlet]="filter"></ng-template>
+            <!-- <ng-template [ngTemplateOutlet]="filter"></ng-template>
             <div class="example-spacer" style="gap: 4%;">
                 <mat-button-toggle-group [(ngModel)]="searchCriteria[i]">
                     <mat-button-toggle value="asc">asc</mat-button-toggle>
                     <mat-button-toggle value="desc">desc</mat-button-toggle>
                 </mat-button-toggle-group>
                 <mat-icon class="close" (click)="clear(i)">close</mat-icon>
-            </div>
+            </div> -->
           </div></ng-container>
   </div>
   <div class="example-spacer" mat-dialog-actions>

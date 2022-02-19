@@ -41,18 +41,15 @@ export class LoginComponent implements OnInit {
     // }).add(() => {
     //   this.isDataLoaded = true;
     // });
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+    });
     if (this.router.url === '/login') {
       this.isRegister = false;
-      this.loginForm = this.formBuilder.group({
-        username: ['', Validators.required],
-        password: ['', Validators.required],
-      });
     } else if (this.router.url === '/register') {
       this.isRegister = true;
-      this.loginForm = this.formBuilder.group({
-        username: ['', Validators.required],
-        password: ['', Validators.required],
-      });
     }
   }
 
@@ -79,18 +76,14 @@ export class LoginComponent implements OnInit {
     }
     if (this.isRegister) {
       this.appService.register(this.loginForm?.value).subscribe((data: any) => {
-        if (data.values.succes) {
-          const dialogRef = this.dialog.open(DialogComponent, {
-                              data       : {
-                                message: 'Register Successful! Please wait for the administrator to approve your registration.',
-                              },
-                            });
-          dialogRef.afterClosed().subscribe(() => {
-            this.router.navigateByUrl(Url.getLoginURL());
-          });
-        } else {
-          
-        }
+        const dialogRef = this.dialog.open(DialogComponent, {
+                            data       : {
+                              message: 'Register Successful! Please wait for the administrator to approve your registration.',
+                            },
+                          });
+        dialogRef.afterClosed().subscribe(() => {
+          this.router.navigateByUrl(Url.getLoginURL());
+        });
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
           data       : {
@@ -102,21 +95,12 @@ export class LoginComponent implements OnInit {
   }
 
   reset() {
-    if (this.isRegister) {
-      this.loginForm = this.formBuilder.group({
-        'username': ['', Validators.required],
-        'password': ['', Validators.required],
-        // image: new FormControl(null, [Validators.required, requiredFileType('png')]),
-      });
-    }
-    if (!this.isRegister) {
-      this.loginForm = this.formBuilder.group({
-        'username': ['', Validators.required],
-        'password': ['', Validators.required],
-        // 'role': ['', Validators.required],
-        // image: new FormControl(null, [Validators.required, requiredFileType('png')]),
-      });
-    }
+    this.loginForm = this.formBuilder.group({
+      'username': ['', Validators.required],
+      'password': ['', Validators.required],
+      'email': ['', [Validators.required, Validators.email]],
+      // image: new FormControl(null, [Validators.required, requiredFileType('png')]),
+    });
   }
 
   goToLogin() {
@@ -125,5 +109,9 @@ export class LoginComponent implements OnInit {
 
   goToRegister () {
     this.router.navigateByUrl(Url.getRegisterURL());
+  }
+
+  testing(loginForm: any) {
+    console.log(loginForm.get('email').hasError('email'));
   }
 }

@@ -31,7 +31,8 @@ export class DataService {
         const reqParams = new HttpParams()
           .set('orderBy', searchCriteria.orderBy)
           .set('pageIndex', searchCriteria.pageIndex)
-          .set('pageSize', searchCriteria.pageSize);
+          .set('pageSize', searchCriteria.pageSize)
+          .set('findBy', searchCriteria.findBy);
         return reqParams;
     }
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls.conf import path, re_path
 
 from order.views.web.user import isLoggedIn, register, userLogin, getStatus, getApprovalUser, getMessage, logOut, manageUser
-from order.views.web.order import getOrderList, getOrder, addOrder, getOrderWarehouse
+from order.views.web.order import getOrderList, getOrder, addOrder, getOrderWarehouse, manageOrder, getOrder2List, addOrder2, getOrderDetailList, getDashboard2List
 from order.views.web.outlet import getOutletList, manageOutlet, getOptionOutletList, addOutlet
 from order.views.web.item import addItem, getItemList, getOptionItemList, manageItem
 from order.views.web.warehouse import getOptionWarehouseList, getWarehouseList, manageWarehouse, addWarehouse
@@ -37,6 +37,11 @@ urlpatterns = [
     path(r'warehouse/<str:warehouse_id>', manageWarehouse),
     path(r'message', getMessage),
     path(r'logout', logOut),
+    path(r'order2/<str:order_id>', manageOrder),
+    path(r'order2', addOrder2),
+    path(r'order2List/<str:id>', getOrder2List),
+    path(r'orderDetailList', getOrderDetailList),
+    path(r'dashboard2', getDashboard2List),
 
     re_path(r'^(?P<path>.*)/$', index),
     re_path(r'$', index),

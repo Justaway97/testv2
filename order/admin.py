@@ -1,6 +1,7 @@
+from os import access
 from django.contrib import admin
 
-from order.models import DatabaseLock, Item, MessageTable, Order, Outlet, Token, Warehouse
+from order.models import Access, DatabaseLock, Item, MessageTable, Order, Order2, OrderDetail, Outlet, Token, UserProfile, Warehouse
 
 # Register your models here.
 admin.site.register(Item)
@@ -10,3 +11,7 @@ admin.site.register(Warehouse)
 admin.site.register(Token)
 admin.site.register(DatabaseLock)
 admin.site.register(MessageTable)
+admin.site.register(Order2)
+admin.site.register(OrderDetail)
+admin.site.register(UserProfile)
+admin.site.register(Access)

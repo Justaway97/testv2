@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+
+
 import uuid
 
 class Warehouse(models.Model):
@@ -54,7 +56,7 @@ class Item(models.Model):
         super().save()
 
     def __str__(self):
-        return self.item_name
+        return str(self.pk)
 
 class Order(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4) change all to uuid for security issue songming
@@ -128,3 +130,65 @@ class MessageTable(models.Model):
 
     def __str__(self):
         return str(self.message_name)
+
+class Order2(models.Model):
+    order_date = models.DateField()
+    order_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    received_date = models.DateField()
+    remark = models.TextField(null=True)
+    outlet_id = models.ForeignKey(Outlet, on_delete=models.PROTECT)
+    status = models.CharField(max_length=100, default='P')
+
+    def __str__(self):
+        return str(self.pk)
+
+    def updateState(self, data):
+        if 'order_date' in data:
+            self.order_date = data['order_date']
+        if 'order_by' in data:
+            self.order_by = data['order_by']
+        if 'received_date' in data:
+            self.received_date = data['received_date']
+        if 'remark' in data:
+            self.remark = data['remark']
+        if 'outlet_id' in data:
+            self.outlet_id = data['outlet_id']
+        if 'status' in data:
+            self.status = data['status']
+        super().save()
+
+class OrderDetail(models.Model):
+    order2_id = models.ForeignKey(Order2, on_delete=models.CASCADE)
+    item_id = models.ForeignKey(Item, on_delete=models.PROTECT)
+    quantity = models.IntegerField(default=0)
+    status = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.pk)
+
+    def updateState(self, data):
+        if 'order2_id' in data:
+            self.order2_id = data['order2_id']
+        if 'item_id' in data:
+            self.item_id = data['item_id']
+        if 'quantity' in data:
+            self.quantity = data['quantity']
+        if 'status' in data:
+            self.status = data['status']
+        super().save()
+
+class Access(models.Model):
+    code = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+
+    def __str__(self):
+        return str(self.description)
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    access = models.ManyToManyField(Access, blank=True)
+    related_name="user_set",
+    related_query_name="user",
+
+    def __str__(self):
+        return str(self.user)
