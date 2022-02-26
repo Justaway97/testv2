@@ -24,3 +24,7 @@ td {
 .pointer {
     cursor: pointer;
 }
+
+td.mat-cell:last-of-type {
+    padding: 0px;
+}

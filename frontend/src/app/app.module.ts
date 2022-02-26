@@ -23,27 +23,21 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TableComponent } from './table/table.component';
-import { OrderDetailComponent } from './order-detail/order-detail.component';
 import { MatCardModule } from '@angular/material/card';
-import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSortModule } from '@angular/material/sort';
 import { DialogComponent } from './dialog/dialog.component';
-import { OutletDetailComponent } from './outlet-detail/outlet-detail.component';
 import { MatRadioModule } from '@angular/material/radio';
-import { UserApprovalComponent } from './user-approval/user-approval.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
-import { WarehouseComponent } from './warehouse/warehouse.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { SpanBoxComponent } from './span-box/span-box.component';
 import { Order2Component } from './order2/order2.component';
 import { Order2DetailComponent } from './order2-detail/order2-detail.component';
 import { Dashboard2Component } from './dashboard2/dashboard2.component';
 import { DatePipe } from '@angular/common';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -53,15 +47,8 @@ import { DatePipe } from '@angular/common';
     ToolBarComponent,
     SideNavComponent,
     TableComponent,
-    OrderDetailComponent,
-    ItemDetailComponent,
     DialogComponent,
-    OutletDetailComponent,
-    UserApprovalComponent,
-    WarehouseComponent,
-    DashboardComponent,
     FilterDialogComponent,
-    SpanBoxComponent,
     Order2Component,
     Order2DetailComponent,
     Dashboard2Component,
@@ -84,6 +71,7 @@ import { DatePipe } from '@angular/common';
     MatInputModule,
     MatIconModule,
     MatListModule,
+    MatMenuModule,
     MatNativeDateModule,
     MatPaginatorModule,
     MatRadioModule,

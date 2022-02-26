@@ -17,11 +17,13 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() requiredCheckButton: Boolean;
   @Input() size: number;
   @Input() header: string[];
+  @Input() action: string[];
 
   @Output() checkBoxSelected = new EventEmitter();
   @Output() page = new EventEmitter();
   @Output() selectedRow = new EventEmitter();
   @Output() selectedCheckBox = new EventEmitter();
+  @Output() actionSelected = new EventEmitter();
   
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -47,13 +49,6 @@ export class TableComponent implements OnInit, OnChanges {
     } else if (this.dataSource.data.length > 0) {
       this.columns.push(...Object.keys(this.dataSource.data[0]));
     }
-    console.log(this.columns);
-    // this.columns.forEach((x, i) => 
-    //   this.columns[i] = message[x]? { key: x,
-    //                                   value: message[x]}
-    //                               : { key: x,
-    //                                   value: x});
-    // console.log(this.columns);
   }
 
   getMessage(key: any) {
@@ -85,10 +80,6 @@ export class TableComponent implements OnInit, OnChanges {
   getDate(data: any) {
     return new Date(data);
   }
-  // getFormElement(x: any) {
-  //   const formGroup = Object.entries(x).forEach(
-  //     ([key, value]) => console.log(key, value));
-  // }
 
   checkboxChange(event: any, j: any) {
     this.selectedCheckBox.emit({'event': event, 'row':j});
@@ -109,7 +100,10 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   onClickCheckBox(element: any) {
-    console.log(element);
     this.checkBoxSelected.emit({value: element});
+  }
+
+  onActionClick(index: number, rowIndex: number) {
+    this.actionSelected.emit({action: index, row: rowIndex});
   }
 }

@@ -1,4 +1,3 @@
-import { i18nMetaToJSDoc } from '@angular/compiler/src/render3/view/i18n/meta';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +8,7 @@ import { DataService } from '../services/data.service';
 import { Url } from '../url';
 import { DatePipe } from '@angular/common'
 import { cloneDeep } from 'lodash';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-order2-detail',
@@ -20,9 +20,14 @@ export class Order2DetailComponent implements OnInit, OnChanges {
   form: FormGroup;
   isDataLoaded = false;
   options: any = {};
+  itemNameOptionList: any[];
   @Input() selectedRow: any;
   @Output() goToOrder = new EventEmitter();
   @Output() reload = new EventEmitter();
+  today = new Date();
+  comments: any[] = [];
+  oriItemNameOptionList: any[];
+  selected: any[] = [];
 
   constructor(
     private datepipe: DatePipe,
@@ -41,9 +46,10 @@ export class Order2DetailComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if (!this.options.itemNameOptionList || this.options.warehouseNameOptionList) {
+    if (!this.options.itemNameOptionList || !this.oriItemNameOptionList || !this.itemNameOptionList) {
       this.appService.getOptionItemList().subscribe((data: any) => {
-        this.options.itemNameOptionList = data.values;
+        this.appService.setLoadingStatus(false);
+        this.itemNameOptionList = data.values;
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
@@ -51,18 +57,8 @@ export class Order2DetailComponent implements OnInit, OnChanges {
                             },
                           });
       }).add(() => {
-        this.appService.getOptionWarehouseList().subscribe((data: any) => {
-          this.options.warehouseNameOptionList = data.values;
-        }, error => {
-          const dialogRef = this.dialog.open(DialogComponent, {
-                              data       : {
-                                message: error.error.error,
-                              },
-                            });
-        }).add(() => {
-          this.reset();
-          this.isDataLoaded = true;
-        });
+        this.reset();
+        this.isDataLoaded = true;
       });
     } else {
       this.reset();
@@ -75,19 +71,34 @@ export class Order2DetailComponent implements OnInit, OnChanges {
       'order_detail': this.formBuilder.array(this.selectedRow?.order_detail? [] : [ this.createItem() ]),
       'received_date': [this.selectedRow?.received_date? new Date(this.selectedRow.received_date) : '', Validators.required],
       'outlet_name': [this.selectedRow?.outlet_name? this.selectedRow.outlet_name: '', Validators.required],
-      'remark': [this.selectedRow?.remark? this.selectedRow.remark: ''],
+      'remark': [''],
     });
     if (this.selectedRow?.order_detail) {
       const order_details: any[] = [];
       this.selectedRow.order_detail.forEach((value: any, index: any) => {
-        (this.form.get('order_detail') as FormArray).push(this.createItem());
-        order_details.push({
-          'item_id': value.item_id,
-          'quantity': value.quantity,
-          'status': value.status === 'C'? true: false,
-        });
+        this.orderDetails.push(this.createItem());
+        this.orderDetails.controls[index].get('item_id')?.patchValue(value.item_id);
+        this.orderDetails.controls[index].get('quantity')?.patchValue(value.quantity);
+        this.orderDetails.controls[index].get('status')?.patchValue(value.status === 'C'? true: false);
+        this.orderDetails.controls[index].get('order2_id')?.patchValue(value.order2_id);
       });
-      (this.form.get('order_detail') as FormArray).setValue(order_details);
+    }
+    this.comments = [];
+    if (this.selectedRow.remark) {
+      const comment: string[] = this.selectedRow.remark.split('>>');
+      comment.forEach((c: any) => {
+        if (c.includes('::')) {
+          const split = c.split('::');
+          this.comments.push({
+            name: split[0],
+            comment: split[1],
+          })
+        } else {
+          this.comments.push({
+            comment: c,
+          })
+        }
+      });
     }
   }
 
@@ -96,35 +107,44 @@ export class Order2DetailComponent implements OnInit, OnChanges {
       'item_id': ['', Validators.required],
       'quantity': [0, Validators.required],
       'status': [false, Validators.required],
+      'order2_id': [''],
     })
   }
 
   submit() {
-    if (!this.selectedRow?.order_id) {
-      this.appService.addOrder2(this.formatForm(this.form.value)).subscribe((data: any) => {
-        console.log('Data successfully added!'); 
-      }, error => {
-        const dialogRef = this.dialog.open(DialogComponent, {
-                            data       : {
-                              message: error.error.error,
-                            },
-                          });
-      }).add(() => {
-        this.isDataLoaded = false;
-        this.goToOrder.emit(this.selectedRow);
-      });
+    if (this.form.valid) {
+      if (!this.selectedRow?.order_id) {
+        this.appService.addOrder2(this.formatForm(this.form.value)).subscribe((data: any) => {
+          this.appService.setLoadingStatus(false);
+        }, error => {
+          const dialogRef = this.dialog.open(DialogComponent, {
+                              data       : {
+                                message: error.error.error,
+                              },
+                            });
+        }).add(() => {
+          this.isDataLoaded = false;
+          this.goToOrder.emit(this.selectedRow);
+        });
+      } else {
+        this.appService.updateOrder2(this.formatForm(this.form.value), this.selectedRow.order_id).subscribe((data: any) => {
+          this.appService.setLoadingStatus(false);
+        }, error => {
+          const dialogRef = this.dialog.open(DialogComponent, {
+                              data       : {
+                                message: error.error.error,
+                              },
+                            });
+        }).add(() => {
+          this.isDataLoaded = false;
+          this.reload.emit();
+        });
+      }
     } else {
-      this.appService.updateOrder2(this.formatForm(this.form.value), this.selectedRow.order_id).subscribe((data: any) => {
-        console.log('Data successfully added!'); 
-      }, error => {
-        const dialogRef = this.dialog.open(DialogComponent, {
-                            data       : {
-                              message: error.error.error,
-                            },
-                          });
-      }).add(() => {
-        this.isDataLoaded = false;
-        this.reload.emit();
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data       : {
+          message: 'Please fill in all mandatory field',
+        },
       });
     }
   }
@@ -141,7 +161,6 @@ export class Order2DetailComponent implements OnInit, OnChanges {
         },
       });
       dialogRef.afterClosed().subscribe(result => {
-        console.log(result);
         if (result) {
           this.goToOrder.emit(this.selectedRow);
         }
@@ -159,54 +178,80 @@ export class Order2DetailComponent implements OnInit, OnChanges {
     this.orderDetails.push(this.createItem());
   }
 
+  onSelectChange(event: any, index: number) {
+    this.selected = [];
+    this.orderDetails.value.forEach((order: any, index: number) => {
+      if (index+1 !== this.orderDetails.value.length) {
+        this.selected.push(order.item_id);
+      }
+    }); 
+    if (this.selected.includes(event.value)) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data       : {
+          message: 'You should increase the amount of the item selected but not adding new duplicated item!',
+        },
+      });
+      this.orderDetails.controls[index].get('item_id')?.patchValue('');
+    }
+  }
+
   removeItem(index: any) {
     this.orderDetails.removeAt(index);
+    this.selectedRow.order_detail.forEach((detail: any, index: number) => {
+      Object.keys(detail).forEach((key) => {
+        if (detail[key] !== this.orderDetails.controls[index].value) {
+          this.orderDetails.markAsDirty();
+          return;
+        }
+      });
+    });
  }
 
-  testing(abc: any) {
-     console.log(abc);
-    return false;
-  }
-
-  onStatusChange(detail: any) {
-    detail.get('status').patchValue(detail.get('status').value==='C'?'P':'C');
-    this.changeDetectorRef.markForCheck();
-  }
-
-  onChangeQuantity(detail: any, value: number) {
+  onChangeQuantity(detail: any, value: number, index: number) {
     const quantity = detail.get('quantity').value;
     if (quantity === 0 && value === -1) {
       return;
     }
     detail.get('quantity').patchValue(detail.get('quantity').value + value);
+    if (!this.selectedRow?.order_id || this.selectedRow.quantity !== detail.get('quantity').value) {
+      detail.markAsDirty();
+    }
+    this.changeDetectorRef.markForCheck();
   }
 
   formatForm(value: any): any {
     value.order_detail.forEach((detail: any) => {
       if (detail.status === true) {
-        console.log(detail.status);
         detail.status = 'C';
       } else {
         detail.status = 'P';
       }
     });
+    if(!this.selectedRow.order_id) {
+      value.remark = sessionStorage.getItem('username')?.concat(' created the order');
+    }
     Object.keys(this.selectedRow).forEach((key) => {
       if (!(key in value)) { // or obj1.hasOwnProperty(key)
           value[key] = this.selectedRow[key];
       }
-    });
+    });let valueChange = false;
     Object.keys(value).forEach((key) => {
       if (key.endsWith('date')) {
         value[key] = this.datepipe.transform(value[key], 'yyyy-MM-dd');
         const date = value[key];
         value[key] = date;
-        console.log(value[key]);
+      }
+      if(this.selectedRow.order_id && this.selectedRow[key] !== 'remark' && value[key] !== this.selectedRow[key]) {
+        valueChange = true;
       }
     });
+    if(this.selectedRow.order_id) {
+      value.remark = this.selectedRow.remark.concat((value.remark? '>>'.concat((sessionStorage.getItem('username') as string), '::', 
+        value.remark): ''), '>>', sessionStorage.getItem('username'), ' update the order');
+    }
     if (!('order_by' in value)) {
       value['order_by'] = sessionStorage.getItem('id');
     }
-    console.log(value);
     return value;
   }
 }

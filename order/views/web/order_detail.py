@@ -1,9 +1,10 @@
 from order.models import Item, OrderDetail
+from django.contrib.auth.decorators import login_required
 
-def addOrderDetail(detail):
-    item = Item.objects.get(item_name = detail['item_name'])
-    new_order_detail = OrderDetail(order2_id=detail['order_id'],
-                                      item_id=item,
+@login_required
+def addOrderDetail(request, detail):
+    new_order_detail = OrderDetail(order2_id=detail['order2_id'],
+                                      item_id=detail['item_id'],
                                      quantity=detail['quantity'],
                                        status=detail['status'])
     new_order_detail.save()

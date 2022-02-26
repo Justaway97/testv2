@@ -2,10 +2,14 @@
   will seperate them into one template each -->
 <ng-container *ngIf="isDataLoaded">
   <ng-container *ngIf="flag">
-      <mat-toolbar color="primary" class="secondary">
+      <mat-toolbar color="primary" class="secondary toolbar">
         <div style="display:flex;align-items: center;width:100%;">
-          <button mat-icon-button (click)="goToSideNav()"><mat-icon>menu</mat-icon></button>
-          <span>{{ title }}</span>
+          <!-- <span>{{ setBreadcrumb() }}</span> -->
+          <div class="breadcrumb" *ngFor="let b of breadcrumb;let i = index">
+            <span [class]="(i % 2 === 0 && i !== breadcrumb.length-1)? 'pointer' : 'span'" (click)="routeTo(breadcrumb[i], i, breadcrumb.length - 1)">
+              {{ breadcrumb[i] }}
+            </span>
+          </div>
           <div class="example-spacer">
             <ng-container *ngIf="displayFilterButton">
               <ng-template [ngTemplateOutlet]="filter"></ng-template>
@@ -18,7 +22,7 @@
       </mat-toolbar>
   </ng-container>
   <ng-container *ngIf="!flag">
-    <mat-toolbar color="warn" class="main">
+    <mat-toolbar color="warn" class="main toolbar">
       <div style="display:flex;align-items: center;width:100%;">
         Welcome  {{username}}
         <div class="example-spacer">

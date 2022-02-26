@@ -11,34 +11,36 @@ import { Url } from './url';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'frontend';
   timer: any;
+  isLoading: Boolean = false;
 
   constructor(
     private appService: AppService,
     private router: Router,
   ) {
-    this.appService.getHome().subscribe((data:any) => {
-      console.log(data);
-    }, error => {
-      console.log('error here');
-    })
+  }
+
+  setLoading() {
+    console.log(this.appService.getLoadingStatus());
+    this.isLoading = this.appService.getLoadingStatus();
   }
 
   ngOnInit() { 
     this.router.routeReuseStrategy.shouldReuseRoute = function() {
       return false;
     };
-    // this.timer = setInterval(() => this.check(), 30*1000);
+    this.setLoading();
+    this.timer = setInterval(() => this.setLoading(), 1000);
     // this.check();
   }
   ngOnDestroy() {if (this.timer) clearInterval(this.timer);}
 
   check() {
-    console.log('here');
-    this.appService.isLoggedIn().subscribe((data : any) => {
-      if (!data.result) window.open(Url.getLoginURL(), '_self');
-    }, error => {
-      window.open(Url.getLoginURL(), '_self');
-    });
+    if (this.router.url !== '/register' && this.router.url !== '/login') {
+      this.appService.isLoggedIn(sessionStorage.getItem('username') as string).subscribe((data : any) => {
+      }, error => {
+        window.open(Url.getLoginURL(), '_self');
+      });
+    }
   }
 
 

@@ -62,6 +62,7 @@ input[type=number] {
 .quantity-column {
     display: flex;
     align-content: center;
+    justify-content: center;
 }
 
 ::ng-deep {
@@ -145,4 +146,40 @@ td {
 
 span {
     font-size: 1rem;
+}
+
+ul {
+    list-style-type: none;
+    padding-right: 5%;
+}
+
+ul li p {
+    font-size: 1rem;
+    margin: 0px;
+}
+
+li {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    // border-bottom: white solid;
+}
+
+.name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.remark {
+//     max-height: 10%;
+//     overflow: hidden;
+//     overflow-y: scroll;
+    padding-right: 2%;
+    width: 100%;
+    background-color: black;
+}
+
+.comment {
+    text-align: center;
+    color: lightblue;
 }

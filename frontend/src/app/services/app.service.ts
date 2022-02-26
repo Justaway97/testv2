@@ -8,7 +8,7 @@ import { DataService } from "./data.service";
 })
 export class AppService {
     private static URL_HOME = '/main';
-    private static URL_IS_LOGGED_IN = '/isLoggedIn';
+    private static URL_IS_LOGGED_IN = '/isLoggedIn/<username>';
     private static URL_LOGIN = '/login';
     private static URL_ITEM_LIST = '/itemList';
     private static URL_OUTLET_LIST = '/outletList';
@@ -28,244 +28,145 @@ export class AppService {
     private static URL_WAREHOUSE_LIST = '/warehouseList';
     private static URL_LOGOUT = '/logout';
     private static URL_ORDER2_LIST = '/order2List/<id>';
+    private static URL_CANCEL = '/can';
     private static URL_ORDER2_DETAIL = '/order2/<id>';
     private static URL_DASHBOARD2 = '/dashboard2';
+
+    private static loadingStatus: Boolean = false;
 
     constructor(
         private http: HttpClient,
         private dataService: DataService,
     ) { }
+
+    setLoadingStatus(status: Boolean) {
+        console.log(status, 'appService');
+        AppService.loadingStatus = status;
+    }
+    
+    getLoadingStatus(): Boolean {
+        return AppService.loadingStatus;
+    }
     
     getHome(): Observable<any> {
-        return this.http.get(AppService.URL_HOME, { withCredentials: true });
+        this.setLoadingStatus(true);
+        const response = this.http.get(AppService.URL_HOME, { withCredentials: true });
+        return response;
     }
 
-    isLoggedIn(): Observable<any> {
-        return this.http.get(AppService.URL_HOME.concat(AppService.URL_IS_LOGGED_IN), { withCredentials: true });
+    isLoggedIn(username: string): Observable<any> {
+        return this.http.get(AppService.URL_HOME.concat(AppService.URL_IS_LOGGED_IN.replace('<username>',username)), { withCredentials: true });
     }
 
     login(value: any): Observable<any> {
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_LOGIN), value, { withCredentials: true });
+        this.setLoadingStatus(true);
+        const response = this.http.post(AppService.URL_HOME.concat(AppService.URL_LOGIN), value, { withCredentials: true });
+        return response;
     }
 
     register(value: any) {
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_REGISTER), value, { withCredentials: true });
-    }
-    getItemList(searchCriteria: any): Observable<any> {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_ITEM_LIST), 
-            {
-                params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
-                withCredentials: true
-            }
-        );
-    }
-
-    getOrderList(id: string, searchCriteria: any): Observable<any> {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_ORDER_LIST.replace('<id>',id)), 
-            {
-                params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
-                withCredentials: true
-            }
-        );
-    }
-
-    addOrder(order: any): Observable<any> {
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_ORDER), order, {withCredentials: true});
+        this.setLoadingStatus(true);
+        const response = this.http.post(AppService.URL_HOME.concat(AppService.URL_REGISTER), value, { withCredentials: true });
+        return response;
     }
 
     addOrder2(order: any): Observable<any> {
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_ORDER2), order, {withCredentials: true});
-    }
-
-    getOrder(id: any): Observable<any> {
-        return this.http.get(AppService.URL_HOME.concat(AppService.URL_ORDER).concat(AppService.URL_PK.replace('<id>',id)), {withCredentials: true});
-    }
-
-    addItem(value: any) {
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_ITEM), value, {withCredentials: true});
-    }
-
-    getItem(id: any) {
-        return this.http.get(AppService.URL_HOME.concat(AppService.URL_ITEM).concat(AppService.URL_PK.replace('<id>',id)), {withCredentials: true});
-    }
-
-    updateItem(value: any) {
-        const id = value.id
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_ITEM).concat(AppService.URL_PK.replace('<id>',id)), value, {withCredentials: true});
+        this.setLoadingStatus(true);
+        const response = this.http.post(AppService.URL_HOME.concat(AppService.URL_ORDER2), order, {withCredentials: true});
+        return response;
     }
 
     getOutletList(searchCriteria: any) {
-        return this.http.get(
+        this.setLoadingStatus(true);
+        const response = this.http.get(
             AppService.URL_HOME.concat(AppService.URL_OUTLET_LIST),
             {
                 params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
                 withCredentials: true
             }
         );
-    }
-
-    addOutlet(value: any) {
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_OUTLET), value, {withCredentials: true});
-    }
-
-    addWarehouse(value: any) {
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_WAREHOUSE), value, {withCredentials: true});
-    }
-
-    updateWarehouse(value: any) {
-        const id = value.id
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_WAREHOUSE).concat(AppService.URL_PK.replace('<id>',id)), value, {withCredentials: true});
-    }
-
-    getOutlet(id: any) {
-        return this.http.get(AppService.URL_HOME.concat(AppService.URL_OUTLET).concat(AppService.URL_PK.replace('<id>',id)), {withCredentials: true});
-    }
-
-    updateOutlet(value: any) {
-        const id = value.id
-        return this.http.post(AppService.URL_HOME.concat(AppService.URL_OUTLET).concat(AppService.URL_PK.replace('<id>',id)), value, {withCredentials: true});
-    }
-
-    getApprovalUserList() {
-        return this.http.get(AppService.URL_HOME.concat(AppService.URL_APPROVAL).concat(AppService.URL_USER), { withCredentials: true});
-    }
-
-    getOrderWarehouseList(searchCriteria: any) {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_ORDER)
-                               .concat(AppService.URL_WAREHOUSE), 
-            {
-                params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
-                withCredentials: true
-            }
-        );
+        return response;
     }
 
     getOptionItemList() {
-        return this.http.get(
+        this.setLoadingStatus(true);
+        const response = this.http.get(
             AppService.URL_HOME.concat(AppService.URL_OPTION)
                                .concat(AppService.URL_ITEM), 
             {
                 withCredentials: true
             }
         );
-    }
-
-    getOptionWarehouseList() {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_OPTION)
-                               .concat(AppService.URL_WAREHOUSE), 
-            {
-                withCredentials: true
-            }
-        );
-    }
-
-    getOptionOutletList() {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_OPTION)
-                               .concat(AppService.URL_OUTLET), 
-            {
-                withCredentials: true
-            }
-        );
+        return response;
     }
 
     logout() {
-        return this.http.post(
+        this.setLoadingStatus(true);
+        const response = this.http.post(
             AppService.URL_HOME.concat(AppService.URL_LOGOUT),
             {},
             { 
                 withCredentials: true 
             }
         );
-    }
-
-    userApproval(value: any) {
-        return this.http.post(
-            AppService.URL_HOME.concat(AppService.URL_USER),
-            value,
-            {
-                withCredentials: true
-            }
-        );
-    }
-
-    getMessage() {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_MESSAGE),
-            {
-                withCredentials: true
-            }
-        );
-    }
-
-    getWarehouseList(searchCriteria: any) {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_WAREHOUSE_LIST),
-            {
-                params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
-                withCredentials: true
-            }
-        );
-    }
-
-    getWarehouse(id: any) {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_WAREHOUSE).concat(AppService.URL_PK.replace('<id>',id)),
-            {
-                withCredentials: true
-            }
-        );
-    }
-
-    getOrderStatus(id: any) {
-        return this.http.get(
-            AppService.URL_HOME.concat(AppService.URL_STATUS).concat(AppService.URL_PK.replace('<id>',id)),
-            {
-                withCredentials: true
-            }
-        );
+        return response;
     }
 
     getOrder2List(id: string, searchCriteria: any) {
-        return this.http.get(
+        this.setLoadingStatus(true);
+        const response = this.http.get(
             AppService.URL_HOME.concat(AppService.URL_ORDER2_LIST.replace('<id>',id)), 
             {
                 params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
                 withCredentials: true
             }
         );
+        return response;
     }
 
     getOrder2(id: string) {
-        return this.http.get(
+        this.setLoadingStatus(true);
+        const response = this.http.get(
             AppService.URL_HOME.concat(AppService.URL_ORDER2_DETAIL.replace('<id>',id)), 
             {
                 withCredentials: true
             }
         );
+        return response;
     }
 
     getDashboard2List(searchCriteria: any) {
-        return this.http.get(
+        this.setLoadingStatus(true);
+        const response = this.http.get(
             AppService.URL_HOME.concat(AppService.URL_DASHBOARD2),
             {
                 params: this.dataService.setParamsFromSearchCriteria(searchCriteria),
                 withCredentials: true
             }
         );
+        return response;
     }
 
     updateOrder2(order: any, id: string) {
-        return this.http.post(
+        this.setLoadingStatus(true);
+        const response = this.http.post(
             AppService.URL_HOME.concat(AppService.URL_ORDER2_DETAIL.replace('<id>',id)), 
             order,
             {
                 withCredentials: true
             }
         );
+        return response;
+    }
+
+    cancelOrder2(id: string) {
+        this.setLoadingStatus(true);
+        const response = this.http.post(
+            AppService.URL_HOME.concat(AppService.URL_CANCEL, AppService.URL_ORDER2_DETAIL.replace('<id>',id)), 
+            {
+                withCredentials: true
+            }
+        );
+        return response;
     }
 }

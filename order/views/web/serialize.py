@@ -1,9 +1,6 @@
 import datetime
 
 def serialize_order2(order2):
-    print(order2)
-    print(order2.id, order2.order_date, order2.order_by.username, order2.received_date, order2.remark, order2.outlet_id.outlet_name,
-    order2.status)
     res = {
         'order_id': order2.id,
         'order_date': order2.order_date,

@@ -25,12 +25,13 @@ export class ToolBarComponent implements OnInit, OnChanges {
   @Output() displayWarehouseButton = new EventEmitter();
   @Output() filterNav = new EventEmitter();
   @Output() filterDialog = new EventEmitter();
+  @Output() routeToOutput = new EventEmitter();
 
   @Input() access: string;
   @Input() colourSelection: string;
   @Input() allSearchOptions: any[];
   @Input() displayMyCart: boolean;
-  @Input() title: string;
+  @Input() breadcrumb: string[];
   @Input() displayAddButton: boolean;
   @Input() displayFilterButton: boolean;
 
@@ -51,15 +52,10 @@ export class ToolBarComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
-    if ('title' in changes) {
-      this.title = changes['title'].currentValue;
+    if ('breadcrumb' in changes) {
+      this.breadcrumb = changes['breadcrumb'].currentValue;
     }
   }
-
-  // async messageService(message: string) {
-  //   console.log(await this.commonService.findMessage(message));
-  //   return await this.commonService.findMessage(message) as unknown as string;
-  // };
 
   ngOnInit(): void {
     if (this.colourSelection === 'primary') {
@@ -124,6 +120,8 @@ export class ToolBarComponent implements OnInit, OnChanges {
 
   logOut() {
     this.appService.logout().subscribe((data: any) => {
+      this.appService.setLoadingStatus(false);
+      sessionStorage.clear(); 
     }).add(() => {
       this.router.navigateByUrl(Url.getLoginURL());
     });
@@ -135,5 +133,11 @@ export class ToolBarComponent implements OnInit, OnChanges {
 
   filterSearchCriteria() {
     this.filterDialog.emit();
+  }
+
+  routeTo(bc: any, index: number, last: number) {
+    if (index % 2 === 0 && index !== last) {
+      this.routeToOutput.emit(bc);
+    }
   }
 }

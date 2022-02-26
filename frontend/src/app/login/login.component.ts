@@ -5,6 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { AppService } from '../services/app.service';
+import { DataService } from '../services/data.service';
 import { Url } from '../url';
 
 @Component({
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit {
     private title: Title,
     private appService: AppService,
     private dialog: MatDialog,
+    private dataService: DataService,
   ) {
     this.title.setTitle('Login - Order');
   }
@@ -56,13 +58,11 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (!this.isRegister) {
       this.appService.login(this.loginForm?.value).subscribe((data: any) => {
+        this.appService.setLoadingStatus(false);
         sessionStorage.setItem('username', data.values.username);
         sessionStorage.setItem('id', data.values.id);
-        // console.log(data, 'login');
-        // const token = this.dataService.getDecodedAccessToken(data.token);
-        // sessionStorage.setItem('token', data.token);
-        // console.log(token);
-        this.router.navigateByUrl(Url.getHomeURL());
+        this.dataService.setUserAccess(data.values.accesses);
+        this.router.navigateByUrl(Url.getOutletURL());
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
@@ -76,6 +76,7 @@ export class LoginComponent implements OnInit {
     }
     if (this.isRegister) {
       this.appService.register(this.loginForm?.value).subscribe((data: any) => {
+        this.appService.setLoadingStatus(false);
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
                               message: 'Register Successful! Please wait for the administrator to approve your registration.',
@@ -109,9 +110,5 @@ export class LoginComponent implements OnInit {
 
   goToRegister () {
     this.router.navigateByUrl(Url.getRegisterURL());
-  }
-
-  testing(loginForm: any) {
-    console.log(loginForm.get('email').hasError('email'));
   }
 }

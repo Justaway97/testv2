@@ -1,15 +1,26 @@
 from os import access
 from django.contrib import admin
 
-from order.models import Access, DatabaseLock, Item, Order, Order2, OrderDetail, Outlet, Token, UserProfile
+from order.models import Access, Item, Order2, OrderDetail, Outlet, Role, UserProfile
 
 # Register your models here.
 admin.site.register(Item)
 admin.site.register(Outlet)
-admin.site.register(Order)
-admin.site.register(Token)
-admin.site.register(DatabaseLock)
 admin.site.register(Order2)
 admin.site.register(OrderDetail)
-admin.site.register(UserProfile)
-admin.site.register(Access)
+
+class AccessAdmin(admin.ModelAdmin):
+    search_fields = ['description']
+
+admin.site.register(Access, AccessAdmin)
+
+class RoleAdmin(admin.ModelAdmin):
+    search_fields = ['code']
+    autocomplete_fields = ['access']
+
+admin.site.register(Role, RoleAdmin)
+
+class UserProfileAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['role']
+
+admin.site.register(UserProfile, UserProfileAdmin)

@@ -1,28 +1,21 @@
 <ng-container>
   <ng-container *ngIf="isDataLoaded">
-  <app-tool-bar style="height:10%;" colourSelection="warn"></app-tool-bar>
+  <app-tool-bar style="height:10%;display:block;" colourSelection="warn"></app-tool-bar>
   <div style="display:flex;height:90%;flex-direction: column;">
   <!-- <app-side-nav style="width:12%"
                 [username]="username"></app-side-nav> -->
   <mat-drawer-container autosize style="width:100%">
-      <app-tool-bar colourSelection="primary"
+      <app-tool-bar style="height: 9%;display:block;"
+                    colourSelection="primary"
                     (toggleAddPanel)="toggleAddPanel()"
                     (filterNav)="leftDrawer.toggle()"
-                    [title]="title"
-                    [displayAddButton]="currentTable !== 'dashboard'"
-                    [displayFilterButton]="true"
-                    (filterDialog)="openFilterDialog()"
+                    [breadcrumb]="breadcrumb"
+                    [displayAddButton]="title === 'Order2'"
+                    (routeToOutput)="routeTo($event)"
                     [allSearchOptions]="searchOptions"></app-tool-bar>
       <!-- <app-span-box [data]="statusData"></app-span-box> -->
       <div [ngClass]="isMobileView() ? 'mat-elevation-z8' : 'mat-elevation-z8 not-mobile'" style="margin-top: 16px;">
         <ng-container *ngIf="currentTable">
-          <ng-container *ngIf="currentTable === 'item'">
-            <app-table class="inline-block"
-                      [tableData]="itemList"
-                      (page)="pageChange($event)"
-                      [size]="tableSize"
-                      (selectedRow)="toggleOrderDetailPanel($event)"></app-table>
-          </ng-container>
           <ng-container *ngIf="currentTable === 'outlet'">
             <app-table class="inline-block"
                       [tableData]="outletList"
@@ -30,42 +23,14 @@
                       [size]="tableSize"
                       (selectedRow)="goToOrder2($event)"></app-table>
           </ng-container>
-          <ng-container *ngIf="currentTable === 'order'">
-            <app-table class="inline-block"
-                      [tableData]="orderList"
-                      (page)="pageChange($event)"
-                      [size]="tableSize"
-                      (selectedRow)="toggleOrderDetailPanel($event)"></app-table>
-          </ng-container>
-          <ng-container *ngIf="currentTable === 'approval'">
-            <app-table class="inline-block"
-                      [tableData]="approvalUserList"
-                      (page)="pageChange($event)"
-                      [size]="tableSize"
-                      [requiredCheckButton]="true"
-                      (selectedCheckBox)="onChangeCheckBoxList($event)"
-                      (selectedRow)="toggleApprovalUserPanel($event)"></app-table>
-          </ng-container>
-          <ng-container *ngIf="currentTable === 'warehouse'">
-            <app-table class="inline-block"
-                      [tableData]="warehouseList"
-                      (page)="pageChange($event)"
-                      [size]="tableSize"
-                      (selectedRow)="toggleWarehousePanel($event)"></app-table>
-          </ng-container>
-          <ng-container *ngIf="currentTable === 'dashboard'">
-            <app-table class="inline-block"
-                      [tableData]="orderList"
-                      (page)="pageChange($event)"
-                      [size]="tableSize"
-                      (selectedRow)="toggleOrderDetailPanel($event)"></app-table>
-          </ng-container>
           <ng-container *ngIf="currentTable === 'order2' || currentTable === 'dashboard2'">
             <app-table class="inline-block"
                       [tableData]="order2List"
                       (page)="pageChange($event)"
                       [header]="header"
                       [size]="tableSize"
+                      (actionSelected)="menuAction($event)"
+                      [action]="action"
                       (checkBoxSelected)="updateStatus($event)"
                       (selectedRow)="toggleOrder2DetailPanel($event)"></app-table>
           </ng-container>
@@ -77,36 +42,7 @@
                              (goToOrder)="goToOrder2($event)"></app-order2-detail>
         </ng-container>
       </div> 
-      <ng-container *ngIf="currentTable === 'approval'">
-        <div style="display:block;margin:10px;">
-          <button mat-raised-button style="background-color: rgb(0, 255, 0);margin-right:10px;" (click)="approval('approve')" [disabled]="checkBoxList.length === 0">Approve</button>
-          <button mat-raised-button style="background-color: red;" (click)="approval('reject')" [disabled]="checkBoxList.length === 0">Reject</button>
-        </div>
-      </ng-container>
-      <mat-drawer #leftDrawer class="example-sidenav-left" mode="side" [opened]="!isMobileView()" position="start" autosize="true">
-        <div class="side-nav-container">
-          <div>
-            <a mat-list-item routerLink="." *ngFor="let nav of filterNav;let i = index" [routerLink]="['/'+getNav(nav)]">
-              <button class="side-nav-list" style="margin-top: 0.5em;" mat-button>
-                <mat-icon aria-hidden="false" style="margin-right: 0.8em;" aria-label="Example home icon">{{filterIconNav[i]}}</mat-icon>
-
-                {{nav}}
-              </button>
-            </a>
-          </div>
-        </div>
-      </mat-drawer>
-      <!-- <mat-drawer #rightDrawer class="example-sidenav-right" mode="side" position="end">
-        <app-order-detail *ngIf="(currentTable === 'order' || currentTable === 'dashboard') && (selectedRow || isAddAction)" [selectedRow]="selectedRow" (toggleSideNav)="closeRightSideNav($event)" ></app-order-detail>
-        <app-user-approval *ngIf="currentTable === 'approval' && selectedRow" [selectedRow]="selectedRow" (toggleSideNav)="closeRightSideNav($event)" ></app-user-approval>
-        <app-item-detail style="width:100%;height:100%;display:inline-block;" *ngIf="currentTable==='item' && (isAddAction || isUpdateAction)" [selectedRow]="selectedRow" (toggleSideNav)="closeRightSideNav($event)" ></app-item-detail>
-        <app-outlet-detail style="width:100%;height:100%;display:inline-block;" *ngIf="currentTable==='outlet' && (isAddAction || isUpdateAction)" [selectedRow]="selectedRow" (toggleSideNav)="closeRightSideNav($event)" ></app-outlet-detail>
-        <app-warehouse style="width:100%;height:100%;display:inline-block;" *ngIf="currentTable==='warehouse' && (isAddAction || isUpdateAction)" [selectedRow]="selectedRow" (toggleSideNav)="closeRightSideNav($event)"></app-warehouse>
-      </mat-drawer> -->
   </mat-drawer-container>
-  <div id="footer"style="height:10%;">This is a footer.
-    This stays at the bottom of the page.
-  </div>
   </div>
   </ng-container>
 </ng-container>

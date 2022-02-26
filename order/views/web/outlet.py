@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from order.models import Outlet
 from order.views.web.shared import generate_error_response
+from django.contrib.auth.decorators import login_required
 
 
 def isOutletExist(data, outlet_id = 0):
@@ -55,14 +56,15 @@ def manageOutlet(request, outlet_id):
         return JsonResponse({}, status=200)
     return generate_error_response({}, status=405)
 
+@login_required
 @require_GET
 def getOutletList(request):
     offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
-    print(offset)
     outlets = Outlet.objects.all().order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
     size = Outlet.objects.all().count()
     return JsonResponse({'values': [serialize_outlet(x) for x in outlets], 'size': size}, status=200)
 
+@login_required
 @require_GET
 def getOptionOutletList(request):
     outlets = Outlet.objects.all()

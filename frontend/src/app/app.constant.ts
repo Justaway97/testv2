@@ -8,6 +8,7 @@ export const message: any = {
     'order_id': 'Order ID',
     'order_by': 'Order By',
     'target_received_date': 'Target Received Date',
+    'order_date': 'Order Date',
     'outlet_id': 'Outlet',
     'arrived_date': 'Arrived Date',
     'warehouse_name': 'Warehouse',

@@ -11,7 +11,7 @@
             <div class="row">
               <div class="col-1">
                 <span>
-                  You are ordering for {{ this.selectedRow.outlet_name }}
+                  You are placing your order for {{ this.selectedRow.outlet_name }} on {{ this.selectedRow.order_date? this.selectedRow.order_date : today | date:'yyyy-MM-dd' }}
                 </span>
               </div>
             </div>
@@ -28,8 +28,8 @@
                       <td class="padding-table" [formGroupName]="i">
                       <!-- <div class="col-3"> -->
                         <mat-form-field class="full-width">
-                          <mat-select formControlName="item_id">
-                            <mat-option *ngFor="let itemName of options.itemNameOptionList" [value]="itemName.id">
+                          <mat-select [required]="true" formControlName="item_id" (selectionChange)="onSelectChange($event, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                            <mat-option *ngFor="let itemName of itemNameOptionList" [value]="itemName.id">
                               {{itemName.item_name}}
                             </mat-option>
                           </mat-select>
@@ -39,24 +39,22 @@
                       <td class="padding-table" [formGroupName]="i">
                         <div class="quantity-column">
                       <!-- <div class="col-2"> -->
-                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, -1)">
+                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, -1, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
                             <mat-icon>remove</mat-icon>
                           </button>
-                          <input class="quantity" id="quantity" type="number" min="0" formControlName="quantity">
-                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, 1)">
+                          <ng-container *ngIf="(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                            <input class="quantity" required id="quantity" type="number" min="0" formControlName="quantity" ng-disabled="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                          </ng-container>
+                          <ng-container *ngIf="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                            <input class="quantity" type="number" [value]="detail.get('quantity')?.value" disabled>
+                          </ng-container>
+                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, 1, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
                             <mat-icon>add</mat-icon>
                           </button>
                         </div>
-                      <!-- </div> -->
                       </td>
-                      <!-- <ng-container *ngIf="selectedRow?.status === 'P' || selectedRow?.status === 'NC'">
-                        <mat-button-toggle-group formControlName="status" aria-label="Font Style">
-                          <mat-button-toggle value="P">Pending</mat-button-toggle>
-                          <mat-button-toggle value="C">Completed</mat-button-toggle>
-                        </mat-button-toggle-group>
-                      </ng-container> -->
                       <td class="padding-table" [formGroupName]="i">
-                      <mat-checkbox color="primary" formControlName="status"></mat-checkbox>
+                        <mat-checkbox color="primary" formControlName="status" [disabled]="!selectedRow?.status || selectedRow?.status === 'CAN'"></mat-checkbox>
                       </td>
                       <td class="padding-table">
                       <ng-container *ngIf="!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'NC'">
@@ -83,12 +81,36 @@
               <div class="col-1">
                 <mat-form-field appearance="fill">
                   <mat-label>Target Received Date</mat-label>
-                  <input matInput formControlName="received_date" [matDatepicker]="pickerTargetReceivedDate">
+                  <input matInput formControlName="received_date" [min]="today" [required]="true" [matDatepicker]="pickerTargetReceivedDate" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
                   <mat-datepicker-toggle matSuffix [for]="pickerTargetReceivedDate"></mat-datepicker-toggle>
                   <mat-datepicker #pickerTargetReceivedDate></mat-datepicker>
                 </mat-form-field>
               </div>
             </div>
+            <ng-container *ngIf="comments.length !== 0">
+              <div class="row">
+                <div class="col-1">
+                  <h2>Remarks</h2>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-1">
+                  <div class="remark">
+                    <ul>
+                      <li *ngFor="let comment of comments;let i = index">
+                        <ng-container *ngIf="comment.name">
+                          <p class="name">{{ comment.name }}</p>
+                          <p>{{ comment.comment }}</p>
+                        </ng-container>
+                        <ng-container *ngIf="!comment.name">
+                          <p class="comment">{{ comment.comment }}</p>
+                        </ng-container>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
             <div class="row">
               <div class="col-1">
                 <mat-form-field class="full-width">

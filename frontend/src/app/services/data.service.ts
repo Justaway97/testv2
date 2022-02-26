@@ -17,6 +17,7 @@ export class DataService {
     PAGE_SIZE = 3;
     ITEM_NAME_OPTION_LIST: any[];
     MESSAGES: any[];
+    USER_ACCESS: string[] = []
 
     formatOrder(data: string) {
         const d = data.split('|');
@@ -53,5 +54,9 @@ export class DataService {
             return null;
         }
       }
+    
+    setUserAccess(access: any) {
+        this.USER_ACCESS = access;
+    }
     
 }
