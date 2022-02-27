@@ -69,7 +69,7 @@
               </tr>
             </table>
             <br>
-            <ng-container *ngIf="(!selectedRow?.status || selectedRow?.status === 'P') || !(accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
+            <ng-container *ngIf="(!selectedRow?.status || selectedRow?.status === 'P') && (accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
               <div class="row">
                 <div class="col-1">
                   <button class="add-item" type="button" mat-raised-button color="accent" (click)="addItem()">Add More Item</button>

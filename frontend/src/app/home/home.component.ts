@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import { FilterDialogComponent } from '../filter-dialog/filter-dialog.component';
 import { isMobile, message, status } from '../app.constant';
-import { header } from '../order2/order2.component.constant';
+import { header } from './home.component.constant';
 
 @Component({
   selector: 'app-home',
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
   
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild('leftDrawer', { static: false }) leftDrawer: MatDrawer;
-  header: string[];
+  header = cloneDeep(header);
 
   constructor(
     private appService: AppService,
@@ -68,7 +68,8 @@ export class HomeComponent implements OnInit {
       this.getOutletList();
     } else if (this.router.url === '/dashboard2' && this.dataService.USER_ACCESS.includes('DASHBOARD|VIEW')) {
       this.breadcrumb = ['Dashboard2'];
-      this.header = header;
+      this.header = cloneDeep(header);
+      this.action = undefined;
       this.title = 'Dashboard2';
       this.searchCriteria = {
         ...this.searchCriteria,
@@ -90,10 +91,14 @@ export class HomeComponent implements OnInit {
   }
 
   getDashboard2List() {
+    this.searchCriteria.findBy = null;
     this.appService.getDashboard2List(this.searchCriteria).subscribe((data: any) => {
       this.appService.setLoadingStatus(false);
       this.order2List = data.values;
       this.tableSize = data.size;
+      this.order2List.forEach((order: any) => {
+        order.checkbox = (this.dataService.USER_ACCESS.includes('STATUS|'.concat(order.status)))? true : false;
+      })
     }, error => {
       this.appService.setLoadingStatus(false);
       const dialogRef = this.dialog.open(DialogComponent, {
@@ -154,7 +159,7 @@ export class HomeComponent implements OnInit {
     this.searchCriteria.pageSize = this.dataService.PAGE_SIZE;
     this.breadcrumb = [this.router.url.substring(1).charAt(0).toUpperCase().concat(this.router.url.substring(2))];
     this.action = undefined;
-    this.header = header;
+    this.header = cloneDeep(header);
     if (this.router.url !== '/dashboard2') {
       this.breadcrumb.push(' / ');
       this.breadcrumb.push('Order');
@@ -209,10 +214,19 @@ export class HomeComponent implements OnInit {
                               },
                             });
         }).add(() => {
-          this.goToOrder2(this.selectedRow);
+          if (this.router.url === '/dashboard2') {
+            this.getDashboard2List();
+          } else {
+            this.goToOrder2(this.selectedRow);
+          }
         });
+      } else {
+        if (this.router.url === '/dashboard2') {
+          this.getDashboard2List();
+        } else {
+          this.goToOrder2(this.selectedRow);
+        }
       }
-      this.goToOrder2(this.selectedRow);
     });
   }
 
@@ -254,6 +268,9 @@ export class HomeComponent implements OnInit {
     }
     if (this.title === 'Order2') {
       this.getOrder2List();
+    }
+    if (this.title === 'Dashboard2') {
+      this.getDashboard2List();
     }
   }
 
