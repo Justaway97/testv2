@@ -1,6 +1,8 @@
 <router-outlet>
-    <div [ngClass]="isLoading? 'spin': ''">
-        <div [ngClass]="isLoading? 'loader': ''">
+    <div [ngClass]="isLoading? 'cover': ''">
+        <div [ngClass]="isLoading? 'spin': ''">
+            <div [ngClass]="isLoading? 'loader': ''">
+            </div>
         </div>
     </div>
 </router-outlet>

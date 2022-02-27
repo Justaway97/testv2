@@ -1,5 +1,4 @@
 .loader {
-    margin-top: 50%;
     border: 16px solid #696262;
     border-radius: 50%;
     border-top: 16px solid #00ff22;
@@ -30,9 +29,17 @@
 
 .spin {
     z-index: 100;
-    height: 100%;
-    width: 100%;
     display: flex;
     position: absolute;
     justify-content: center;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.cover {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 100;
 }

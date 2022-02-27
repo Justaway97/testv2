@@ -89,7 +89,7 @@ def addOrder2(request):
                                          quantity=detail['quantity'],
                                            status=detail['status'])
         new_order_detail.save()
-    message = f'{user.username} has created a new order.'
+    message = f'{user.username} has created a new order for {outlet.outlet_name}.'
     emailTo(message)
     return JsonResponse({}, status=200)
 
