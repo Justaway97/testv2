@@ -62,7 +62,11 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem('username', data.values.username);
         sessionStorage.setItem('id', data.values.id);
         this.dataService.setUserAccess(data.values.accesses);
-        this.router.navigateByUrl(Url.getOutletURL());
+        if (this.dataService.USER_ACCESS.includes('DASHBOARD|VIEW')) {
+          this.router.navigateByUrl(Url.getDashboard2URL());
+        } else {
+          this.router.navigateByUrl(Url.getOutletURL());
+        }
       }, error => {
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {

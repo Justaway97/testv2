@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HostListener } from '@angular/core';
 import { AppService } from '../services/app.service';
-import { editableOrderList, itemListHeader, orderListHeader } from './home.component.constant';
-import { BehaviorSubject, map, Observable } from 'rxjs';
-import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
+import { Router } from '@angular/router';
 import { Url } from '../url';
 import { DataService } from '../services/data.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -20,25 +19,12 @@ import { header } from '../order2/order2.component.constant';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  filterNav: string[] = [];
-  filterIconNav: string[] = [];
   itemList = [];
-  searchOptions!: any[];
   isDataLoaded = false;
-  orderList = [];
   outletList = [];
-  warehouseList = [];
-  approvalUserList: any[] = [];
-  editableOrderList: any[] = editableOrderList;
   selectedRow: any;
-  filterOption: any;
-  access: any;
-  isAddAction = false;
-  isUpdateAction = false;
   searchCriteria: any;
   currentTable: string | null;
-  username: string | null;
-  approvalCheckBoxButtonList: any[];
   tableSize: number;
   title: string = 'Item';
   checkBoxList: any[] = [];
@@ -54,10 +40,16 @@ export class HomeComponent implements OnInit {
   constructor(
     private appService: AppService,
     private router: Router,
-    private route: ActivatedRoute,
     private dataService: DataService,
     private dialog: MatDialog,
   ) {
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    if (this.title === 'Order2 Detail' || this.title === 'Order2') {
+      window.history.forward();
+    }
   }
 
   ngOnInit(): void {
@@ -151,7 +143,11 @@ export class HomeComponent implements OnInit {
   goToOrder2(event: any) {
     this.searchCriteria.pageIndex = this.dataService.PAGE_INDEX;
     this.searchCriteria.pageSize = this.dataService.PAGE_SIZE;
-    this.breadcrumb = [this.router.url.substring(1).charAt(0).toUpperCase().concat(this.router.url.substring(2)), ' / ', 'Order'];
+    this.breadcrumb = [this.router.url.substring(1).charAt(0).toUpperCase().concat(this.router.url.substring(2))];
+    if (this.router.url !== '/dashboard2') {
+      this.breadcrumb.push(' / ');
+      this.breadcrumb.push('Order');
+    }
     this.selectedRow = event;
     this.action = ['Cancel'];
     this.searchCriteria = {
@@ -168,7 +164,6 @@ export class HomeComponent implements OnInit {
 
   toggleAddPanel() {
     if (this.currentTable !== 'order2') {
-      this.isAddAction = true;
       this.selectedRow = null;
     } else {
       this.breadcrumb = [this.router.url.substring(1).charAt(0).toUpperCase().concat(this.router.url.substring(2)), ' / ', 'Order',
@@ -207,7 +202,7 @@ export class HomeComponent implements OnInit {
   }
 
   toggleUpdatePanel() {
-    if (this.currentTable === 'order2') {
+    if (this.currentTable === 'order2' || this.currentTable === 'dashboard2') {
       // standardize all id
       this.appService.getOrder2(this.selectedRow.order_id).subscribe((data: any) => {
         this.appService.setLoadingStatus(false);
@@ -219,8 +214,12 @@ export class HomeComponent implements OnInit {
                             },
                           });
       }).add(() => {
-        this.breadcrumb = [this.router.url.substring(1).charAt(0).toUpperCase().concat(this.router.url.substring(2)), ' / ', 'Order',
-          ' / ', 'Order Detail'];
+        this.breadcrumb = [this.router.url.substring(1).charAt(0).toUpperCase().concat(this.router.url.substring(2)), 
+          ' / ','Order',' / ','Order Detail'];
+        if (this.router.url === '/dashboard2') {
+          this.breadcrumb.splice(1,1);
+          this.breadcrumb.splice(1,1);
+        }
         this.title = 'Order2 Detail';
         this.currentTable = null;
       });

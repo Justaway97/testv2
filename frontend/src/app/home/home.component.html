@@ -2,8 +2,6 @@
   <ng-container *ngIf="isDataLoaded">
   <app-tool-bar style="height:10%;display:block;" colourSelection="warn"></app-tool-bar>
   <div style="display:flex;height:90%;flex-direction: column;">
-  <!-- <app-side-nav style="width:12%"
-                [username]="username"></app-side-nav> -->
   <mat-drawer-container autosize style="width:100%">
       <app-tool-bar style="height: 9%;display:block;"
                     colourSelection="primary"
@@ -11,9 +9,7 @@
                     (filterNav)="leftDrawer.toggle()"
                     [breadcrumb]="breadcrumb"
                     [displayAddButton]="title === 'Order2'"
-                    (routeToOutput)="routeTo($event)"
-                    [allSearchOptions]="searchOptions"></app-tool-bar>
-      <!-- <app-span-box [data]="statusData"></app-span-box> -->
+                    (routeToOutput)="routeTo($event)"></app-tool-bar>
       <div [ngClass]="isMobileView() ? 'mat-elevation-z8' : 'mat-elevation-z8 not-mobile'" style="margin-top: 16px;">
         <ng-container *ngIf="currentTable">
           <ng-container *ngIf="currentTable === 'outlet'">
