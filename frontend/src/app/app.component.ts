@@ -20,7 +20,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   setLoading() {
-    console.log(this.appService.getLoadingStatus());
     this.isLoading = this.appService.getLoadingStatus();
   }
 

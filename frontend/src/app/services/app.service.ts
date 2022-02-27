@@ -40,7 +40,6 @@ export class AppService {
     ) { }
 
     setLoadingStatus(status: Boolean) {
-        console.log(status, 'appService');
         AppService.loadingStatus = status;
     }
     
@@ -101,7 +100,6 @@ export class AppService {
     }
 
     logout() {
-        this.setLoadingStatus(true);
         const response = this.http.post(
             AppService.URL_HOME.concat(AppService.URL_LOGOUT),
             {},

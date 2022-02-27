@@ -5,5 +5,4 @@ export const header: string[] = [
     'order_by',
     'order_date',
     'status',
-    'action',
 ]

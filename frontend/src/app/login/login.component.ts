@@ -74,6 +74,7 @@ export class LoginComponent implements OnInit {
                             },
                           });
         dialogRef.afterClosed().subscribe(() => {
+          this.appService.setLoadingStatus(false);
           this.router.navigateByUrl(Url.getLoginURL());
         });
       });
@@ -87,9 +88,11 @@ export class LoginComponent implements OnInit {
                             },
                           });
         dialogRef.afterClosed().subscribe(() => {
+          this.appService.setLoadingStatus(false);
           this.router.navigateByUrl(Url.getLoginURL());
         });
       }, error => {
+        this.appService.setLoadingStatus(false);
         const dialogRef = this.dialog.open(DialogComponent, {
           data       : {
             message: error.error.error,

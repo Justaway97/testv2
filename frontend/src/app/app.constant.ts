@@ -35,3 +35,8 @@ export const status: any = {
     'OOD': 'D',
     'D': 'C',
 }
+
+export const headerMapping: any = {
+    'order_id': 'id',
+    'outlet_id': 'id',
+}

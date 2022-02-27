@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
   statusData: any[] = [];
   order2List = [];
   breadcrumb: string[] = [];
-  action: string[] = [];
+  action: string[] | undefined;
   
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild('leftDrawer', { static: false }) leftDrawer: MatDrawer;
@@ -95,6 +95,7 @@ export class HomeComponent implements OnInit {
       this.order2List = data.values;
       this.tableSize = data.size;
     }, error => {
+      this.appService.setLoadingStatus(false);
       const dialogRef = this.dialog.open(DialogComponent, {
                           data       : {
                             message: error.error.error,
@@ -114,6 +115,7 @@ export class HomeComponent implements OnInit {
       })
       this.tableSize = data.size;
     }, error => {
+      this.appService.setLoadingStatus(false);
       const dialogRef = this.dialog.open(DialogComponent, {
                           data       : {
                             message: error.error.error,
@@ -130,6 +132,13 @@ export class HomeComponent implements OnInit {
       this.appService.setLoadingStatus(false);
       this.outletList = data.values;
       this.tableSize = data.size;
+    }, error => {
+      this.appService.setLoadingStatus(false);
+      const dialogRef = this.dialog.open(DialogComponent, {
+                          data       : {
+                            message: error.error.error,
+                          },
+                        });
     }).add(() => {
       this.isDataLoaded = true;
     });
@@ -144,12 +153,17 @@ export class HomeComponent implements OnInit {
     this.searchCriteria.pageIndex = this.dataService.PAGE_INDEX;
     this.searchCriteria.pageSize = this.dataService.PAGE_SIZE;
     this.breadcrumb = [this.router.url.substring(1).charAt(0).toUpperCase().concat(this.router.url.substring(2))];
+    this.action = undefined;
+    this.header = header;
     if (this.router.url !== '/dashboard2') {
       this.breadcrumb.push(' / ');
       this.breadcrumb.push('Order');
+      this.action = ['Cancel'];
+      if (!this.header.includes('action')) {
+        this.header.push('action');
+      }
     }
     this.selectedRow = event;
-    this.action = ['Cancel'];
     this.searchCriteria = {
       ...this.searchCriteria,
       orderBy: ['received_date'],
@@ -157,7 +171,6 @@ export class HomeComponent implements OnInit {
     };
     this.isDataLoaded = false;
     this.currentTable = 'order2';
-    this.header = header;
     this.title = 'Order2';
     this.getOrder2List();
   }
@@ -187,8 +200,10 @@ export class HomeComponent implements OnInit {
       if (result) {
         order2.status = status[order2.status];
         this.appService.updateOrder2(order2, order2.order_id).subscribe((data: any) => {
+          this.appService.setLoadingStatus(false);
         }, error => {
-                const dialogRef = this.dialog.open(DialogComponent, {
+          this.appService.setLoadingStatus(false);
+          const dialogRef = this.dialog.open(DialogComponent, {
                               data       : {
                                 message: error.error.error,
                               },
@@ -208,6 +223,7 @@ export class HomeComponent implements OnInit {
         this.appService.setLoadingStatus(false);
         this.selectedRow = cloneDeep(data.values);
       }, error => {
+        this.appService.setLoadingStatus(false);
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
                               message: error.error.error,
@@ -291,6 +307,7 @@ export class HomeComponent implements OnInit {
                             },
                           });
       }).add(() => {
+        this.appService.setLoadingStatus(false);
         this.goToOrder2(this.selectedRow);
       });
     }

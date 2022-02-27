@@ -23,7 +23,7 @@ def upload_path(instance, filename):
 class Item(models.Model):
     item_name = models.CharField(max_length=200, unique=True)
     # image_path = models.ImageField(null=True, blank=True, upload_to='images/')
-    remark = models.TextField(null=True)
+    remark = models.TextField(blank=True, default='')
 
     def updateState(self, data):
         if 'item_name' in data:
@@ -35,7 +35,7 @@ class Item(models.Model):
         super().save()
 
     def __str__(self):
-        return str(self.pk)
+        return self.item_name
 
 class Order2(models.Model):
     order_date = models.DateField()

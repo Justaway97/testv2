@@ -28,6 +28,7 @@ export class Order2DetailComponent implements OnInit, OnChanges {
   comments: any[] = [];
   oriItemNameOptionList: any[];
   selected: any[] = [];
+  accesses: any[] = [];
 
   constructor(
     private datepipe: DatePipe,
@@ -46,11 +47,13 @@ export class Order2DetailComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.accesses = this.dataService.USER_ACCESS;
     if (!this.options.itemNameOptionList || !this.oriItemNameOptionList || !this.itemNameOptionList) {
       this.appService.getOptionItemList().subscribe((data: any) => {
         this.appService.setLoadingStatus(false);
         this.itemNameOptionList = data.values;
       }, error => {
+        this.appService.setLoadingStatus(false);
         const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
                               message: error.error.error,
@@ -117,6 +120,7 @@ export class Order2DetailComponent implements OnInit, OnChanges {
         this.appService.addOrder2(this.formatForm(this.form.value)).subscribe((data: any) => {
           this.appService.setLoadingStatus(false);
         }, error => {
+          this.appService.setLoadingStatus(false);
           const dialogRef = this.dialog.open(DialogComponent, {
                               data       : {
                                 message: error.error.error,
@@ -130,6 +134,7 @@ export class Order2DetailComponent implements OnInit, OnChanges {
         this.appService.updateOrder2(this.formatForm(this.form.value), this.selectedRow.order_id).subscribe((data: any) => {
           this.appService.setLoadingStatus(false);
         }, error => {
+          this.appService.setLoadingStatus(false);
           const dialogRef = this.dialog.open(DialogComponent, {
                               data       : {
                                 message: error.error.error,

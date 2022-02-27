@@ -53,7 +53,6 @@ export class ToolBarComponent implements OnInit, OnChanges {
   
   ngOnChanges(changes: SimpleChanges): void {
     if ('breadcrumb' in changes) {
-      console.log(changes['breadcrumb'].currentValue);
       this.breadcrumb = changes['breadcrumb'].currentValue;
     }
   }

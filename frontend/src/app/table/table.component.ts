@@ -17,7 +17,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() requiredCheckButton: Boolean;
   @Input() size: number;
   @Input() header: string[];
-  @Input() action: string[];
+  @Input() action: string[] | undefined;
 
   @Output() checkBoxSelected = new EventEmitter();
   @Output() page = new EventEmitter();

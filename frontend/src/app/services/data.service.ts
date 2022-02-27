@@ -1,10 +1,7 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
-import { Router } from "@angular/router";
-import { DialogComponent } from "../dialog/dialog.component";
-import { Url } from "../url";
-import jwt_decode from 'jwt-decode';
+import { headerMapping } from "../app.constant";
+
 
 @Injectable({
     providedIn: 'root'
@@ -23,9 +20,9 @@ export class DataService {
         const d = data.split('|');
         const order = d[1];
         if (order === 'desc') {
-            return '-'.concat(d[0]);
+            return '-'.concat(headerMapping[d[0]]? headerMapping[d[0]]: d[0]);
         }
-        return d[0];
+        return headerMapping[d[0]]? headerMapping[d[0]]: d[0];
     }
 
     setParamsFromSearchCriteria(searchCriteria: any) {
@@ -46,15 +43,6 @@ export class DataService {
         return searchCriteria;
     }
 
-    getDecodedAccessToken(token: string): any {
-        try{
-            return jwt_decode(token);
-        }
-        catch(Error){
-            return null;
-        }
-      }
-    
     setUserAccess(access: any) {
         this.USER_ACCESS = access;
     }

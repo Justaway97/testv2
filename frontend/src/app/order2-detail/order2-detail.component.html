@@ -28,7 +28,7 @@
                       <td class="padding-table" [formGroupName]="i">
                       <!-- <div class="col-3"> -->
                         <mat-form-field class="full-width">
-                          <mat-select [required]="true" formControlName="item_id" (selectionChange)="onSelectChange($event, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                          <mat-select [required]="true" formControlName="item_id" (selectionChange)="onSelectChange($event, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R') || !(accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
                             <mat-option *ngFor="let itemName of itemNameOptionList" [value]="itemName.id">
                               {{itemName.item_name}}
                             </mat-option>
@@ -39,16 +39,16 @@
                       <td class="padding-table" [formGroupName]="i">
                         <div class="quantity-column">
                       <!-- <div class="col-2"> -->
-                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, -1, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, -1, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R') || !(accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
                             <mat-icon>remove</mat-icon>
                           </button>
                           <ng-container *ngIf="(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
-                            <input class="quantity" required id="quantity" type="number" min="0" formControlName="quantity" ng-disabled="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                            <input class="quantity" required id="quantity" type="number" min="0" formControlName="quantity" ng-disabled="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R') || !(accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
                           </ng-container>
                           <ng-container *ngIf="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
                             <input class="quantity" type="number" [value]="detail.get('quantity')?.value" disabled>
                           </ng-container>
-                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, 1, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                          <button class="pointer quan-button" type="button" (click)="onChangeQuantity(detail, 1, i)" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R') || !(accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
                             <mat-icon>add</mat-icon>
                           </button>
                         </div>
@@ -57,7 +57,7 @@
                         <mat-checkbox color="primary" formControlName="status" [disabled]="!selectedRow?.status || selectedRow?.status === 'CAN'"></mat-checkbox>
                       </td>
                       <td class="padding-table">
-                      <ng-container *ngIf="!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'NC'">
+                      <ng-container *ngIf="(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'NC') && (accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
                         <div class="col-1">
                           <mat-icon class="pointer" (click)="removeItem(i)">delete</mat-icon>
                         </div>
@@ -69,7 +69,7 @@
               </tr>
             </table>
             <br>
-            <ng-container *ngIf="!selectedRow?.status || selectedRow?.status === 'P'">
+            <ng-container *ngIf="(!selectedRow?.status || selectedRow?.status === 'P') || !(accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
               <div class="row">
                 <div class="col-1">
                   <button class="add-item" type="button" mat-raised-button color="accent" (click)="addItem()">Add More Item</button>
@@ -81,7 +81,7 @@
               <div class="col-1">
                 <mat-form-field appearance="fill">
                   <mat-label>Target Received Date</mat-label>
-                  <input matInput formControlName="received_date" [min]="today" [required]="true" [matDatepicker]="pickerTargetReceivedDate" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R')">
+                  <input matInput formControlName="received_date" [min]="today" [required]="true" [matDatepicker]="pickerTargetReceivedDate" [disabled]="!(!selectedRow?.status || selectedRow?.status === 'P' || selectedRow?.status === 'R') || !(accesses.includes('ORDER|ADD') || accesses.includes('ORDER|UPD'))">
                   <mat-datepicker-toggle matSuffix [for]="pickerTargetReceivedDate"></mat-datepicker-toggle>
                   <mat-datepicker #pickerTargetReceivedDate></mat-datepicker>
                 </mat-form-field>
