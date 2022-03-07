@@ -40,3 +40,9 @@ export const headerMapping: any = {
     'order_id': 'id',
     'outlet_id': 'id',
 }
+
+export const defaultReport: any[] = [
+    { ContentHeaderLine: 'default' },
+    { ContentTitleCustom: 'default' },
+    {  }
+]

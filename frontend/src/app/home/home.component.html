@@ -9,15 +9,22 @@
                     (filterNav)="leftDrawer.toggle()"
                     [breadcrumb]="breadcrumb"
                     [displayAddButton]="title === 'Order2'"
+                    [displayGenerateButton]="title === 'Dashboard2'"
+                    (generate)="generatePdf()"
                     (routeToOutput)="routeTo($event)"></app-tool-bar>
       <div [ngClass]="isMobileView() ? 'mat-elevation-z8' : 'mat-elevation-z8 not-mobile'" style="margin-top: 16px;">
         <ng-container *ngIf="currentTable">
           <ng-container *ngIf="currentTable === 'outlet'">
-            <app-table class="inline-block"
-                      [tableData]="outletList"
-                      (page)="pageChange($event)"
-                      [size]="tableSize"
-                      (selectedRow)="goToOrder2($event)"></app-table>
+            <div style="display: flex; flex-direction: column;">
+              <app-table class="inline-block"
+                        [tableData]="outletList"
+                        (page)="pageChange($event)"
+                        [size]="tableSize"
+                        (selectedRow)="goToOrder2($event)"></app-table>
+              <div style="display: flex; padding: 2%">
+                <span style="font-size: 1rem;">No record found!</span>
+              </div>
+            </div>
           </ng-container>
           <ng-container *ngIf="currentTable === 'order2' || currentTable === 'dashboard2'">
             <app-table class="inline-block"
@@ -35,7 +42,7 @@
           <app-order2-detail [ngClass]="isMobileView() ? '' : 'half-width block'"
                              [selectedRow]="selectedRow"
                              (reload)="reload()"
-                             (goToOrder)="goToOrder2($event)"></app-order2-detail>
+                             (goToOrder)="getCurrenRoute() === '/dashboard2'? routeToDashboard() : goToOrder2($event)"></app-order2-detail>
         </ng-container>
       </div> 
   </mat-drawer-container>

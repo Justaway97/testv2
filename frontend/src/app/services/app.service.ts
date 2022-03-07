@@ -10,27 +10,17 @@ export class AppService {
     private static URL_HOME = '/main';
     private static URL_IS_LOGGED_IN = '/isLoggedIn/<username>';
     private static URL_LOGIN = '/login';
-    private static URL_ITEM_LIST = '/itemList';
     private static URL_OUTLET_LIST = '/outletList';
-    private static URL_ORDER_LIST = '/orderList/<id>';
-    private static URL_ORDER = '/order';
     private static URL_ORDER2 = '/order2';
     private static URL_REGISTER = '/register';
     private static URL_ITEM = '/item';
-    private static URL_PK = '/<id>';
-    private static URL_OUTLET = '/outlet';
-    private static URL_APPROVAL = '/approval';
-    private static URL_USER = '/user';
-    private static URL_WAREHOUSE = '/warehouse';
-    private static URL_STATUS = '/status';
     private static URL_OPTION = '/option';
-    private static URL_MESSAGE = '/message';
-    private static URL_WAREHOUSE_LIST = '/warehouseList';
     private static URL_LOGOUT = '/logout';
     private static URL_ORDER2_LIST = '/order2List/<id>';
     private static URL_CANCEL = '/can';
     private static URL_ORDER2_DETAIL = '/order2/<id>';
     private static URL_DASHBOARD2 = '/dashboard2';
+    private static URL_REPORT_TEMPLATE = '/reportTemplate';
 
     private static loadingStatus: Boolean = false;
 
@@ -161,6 +151,17 @@ export class AppService {
         this.setLoadingStatus(true);
         const response = this.http.post(
             AppService.URL_HOME.concat(AppService.URL_CANCEL, AppService.URL_ORDER2_DETAIL.replace('<id>',id)), 
+            {
+                withCredentials: true
+            }
+        );
+        return response;
+    }
+
+    getReportTemplate() {
+        this.setLoadingStatus(true);
+        const response = this.http.get(
+            AppService.URL_HOME.concat(AppService.URL_REPORT_TEMPLATE), 
             {
                 withCredentials: true
             }

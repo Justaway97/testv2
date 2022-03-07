@@ -106,4 +106,12 @@ export class TableComponent implements OnInit, OnChanges {
   onActionClick(index: number, rowIndex: number) {
     this.actionSelected.emit({action: index, row: rowIndex});
   }
+
+  setPageSizeOptions() {
+    let options = [3,5,10]
+    if (this.size > 10) {
+      options.push(this.size);
+    }
+    return options;
+  }
 }

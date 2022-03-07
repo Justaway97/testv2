@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.urls.conf import path, re_path
 
+from order.views.web.reportTemplate import getReportTemplate
 from order.views.web.user import isLoggedIn, register, userLogin, logOut, manageUser
 from order.views.web.order import manageOrder, getOrder2List, addOrder2, getOrderDetailList, getDashboard2List, cancelOrder2
 from order.views.web.outlet import getOutletList
@@ -26,6 +27,7 @@ urlpatterns = [
     path(r'order2List/<str:id>', getOrder2List),
     path(r'orderDetailList', getOrderDetailList),
     path(r'dashboard2', getDashboard2List),
+    path(r'reportTemplate', getReportTemplate),
 
     re_path(r'^(?P<path>.*)/$', index),
     re_path(r'$', index),

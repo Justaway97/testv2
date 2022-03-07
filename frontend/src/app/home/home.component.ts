@@ -172,7 +172,7 @@ export class HomeComponent implements OnInit {
     this.searchCriteria = {
       ...this.searchCriteria,
       orderBy: ['received_date'],
-      findBy: 'outlet_id',
+      findBy: this.router.url === '/dashboard2' ? 'null' : 'outlet_id',
     };
     this.isDataLoaded = false;
     this.currentTable = 'order2';
@@ -315,8 +315,6 @@ export class HomeComponent implements OnInit {
     const row = event.row;
     if (action === 0) {
       this.appService.cancelOrder2(row).subscribe((data: any) => {
-        this.appService.setLoadingStatus(false);
-        // this.selectedRow.outlet_id = data.id;
       }, error => {
               const dialogRef = this.dialog.open(DialogComponent, {
                             data       : {
@@ -328,6 +326,28 @@ export class HomeComponent implements OnInit {
         this.goToOrder2(this.selectedRow);
       });
     }
+  }
+
+  routeToDashboard() {
+    this.router.navigateByUrl(Url.getDashboard2URL());
+  }
+
+  getCurrenRoute() {
+    return this.router.url;
+  }
+
+  generatePdf() {
+    this.appService.getReportTemplate().subscribe((data: any) => {
+      this.dataService.generatePdf(this.outletList?.length > 0 ? this.outletList: this.order2List, data.values);
+    }, error => {
+      const dialogRef = this.dialog.open(DialogComponent, {
+                    data       : {
+                      message: error.error.error,
+                    },
+                  });
+    }).add(() => {
+      this.appService.setLoadingStatus(false);
+    });
   }
 }
 

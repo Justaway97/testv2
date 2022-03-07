@@ -19,8 +19,8 @@ export class ToolBarComponent implements OnInit, OnChanges {
   @Output() displayOrderButton = new EventEmitter();
   @Output() displayHomeButton = new EventEmitter();
   @Output() toggleAddPanel = new EventEmitter();
+  @Output() generate = new EventEmitter();
   @Output() displayOutletButton = new EventEmitter();
-  @Output() displayUserApprovalButton = new EventEmitter();
   @Output() displayOrderWarehouseButton = new EventEmitter();
   @Output() displayWarehouseButton = new EventEmitter();
   @Output() filterNav = new EventEmitter();
@@ -32,6 +32,7 @@ export class ToolBarComponent implements OnInit, OnChanges {
   @Input() allSearchOptions: any[];
   @Input() displayMyCart: boolean;
   @Input() breadcrumb: string[];
+  @Input() displayGenerateButton: boolean;
   @Input() displayAddButton: boolean;
   @Input() displayFilterButton: boolean;
 
@@ -106,10 +107,6 @@ export class ToolBarComponent implements OnInit, OnChanges {
     this.displayOutletButton.emit('Outlet');
   }
 
-  goToUserApproval() {
-    this.displayUserApprovalButton.emit('Approval');
-  }
-
   goToOrderWarehouse() {
     this.displayOrderWarehouseButton.emit('Order');
   }
@@ -139,5 +136,9 @@ export class ToolBarComponent implements OnInit, OnChanges {
     if (index % 2 === 0 && index !== last) {
       this.routeToOutput.emit(bc);
     }
+  }
+
+  goToGenerate() {
+    this.generate.emit();
   }
 }

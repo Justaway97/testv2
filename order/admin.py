@@ -1,7 +1,7 @@
 from os import access
 from django.contrib import admin
 
-from order.models import Access, Item, Order2, OrderDetail, Outlet, Role, UserProfile
+from order.models import Access, Item, Order2, OrderDetail, Outlet, Role, UserProfile, ReportTemplate
 
 # Register your models here.
 admin.site.register(Item)
@@ -24,3 +24,5 @@ class UserProfileAdmin(admin.ModelAdmin):
     autocomplete_fields = ['role']
 
 admin.site.register(UserProfile, UserProfileAdmin)
+
+admin.site.register(ReportTemplate)

@@ -146,9 +146,13 @@ export class Order2DetailComponent implements OnInit, OnChanges {
         });
       }
     } else {
+      let message = 'Please fill in all mandatory field';
+      if (this.form.get('received_date')?.value < new Date()) {
+        message = 'Target Received Date must be future date!';
+      }
       const dialogRef = this.dialog.open(DialogComponent, {
         data       : {
-          message: 'Please fill in all mandatory field',
+          message: message,
         },
       });
     }
@@ -225,13 +229,20 @@ export class Order2DetailComponent implements OnInit, OnChanges {
   }
 
   formatForm(value: any): any {
+    let completeCount = 0;
     value.order_detail.forEach((detail: any) => {
       if (detail.status === true) {
+        completeCount = completeCount + 1;
         detail.status = 'C';
       } else {
         detail.status = 'P';
       }
     });
+    if (completeCount === value.order_detail.length) {
+      value.status = 'C';
+    } else if (completeCount > 0) {
+      value.status = 'NC';
+    }
     if(!this.selectedRow.order_id) {
       value.remark = sessionStorage.getItem('username')?.concat(' created the order');
     }

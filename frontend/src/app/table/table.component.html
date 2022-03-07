@@ -46,7 +46,7 @@
     </div>
   </ng-container>
 </div>
-<mat-paginator *ngIf="dataSource.data.length > 0" [length]="size" [pageSizeOptions]="[3, 5, 10]" showFirstLastButtons (page)="onPaginateChange($event)"></mat-paginator>
+<mat-paginator *ngIf="dataSource.data.length > 0" [length]="size" [pageSizeOptions]="setPageSizeOptions()" showFirstLastButtons (page)="onPaginateChange($event)"></mat-paginator>
 <!-- add icon -->
 <ng-template #add>
   <div>

@@ -61,8 +61,8 @@ def manageOrder(request, order_id):
                 for detail in targetOrderDetails:
                     if not detail.id in orderDetailsIds:
                         OrderDetail.objects.filter(id=detail.id).delete()
-                if targetOrder.status == 'CAN' or targetOrder.status == 'C':
-                    message = f'{user.username} has cancel order {targetOrder.order2_id} for {outlet.outlet_name}.'
+                if targetOrder.status == 'CAN':
+                    message = f'{user.username} has cancel order {targetOrder.id} for {outlet.outlet_name}.'
                     emailTo(message)
             return JsonResponse({}, status=200)
     return generate_error_response('Order not found!', status=404)
@@ -117,10 +117,11 @@ def getOrderDetailList(request, order_id):
 @require_GET
 def getDashboard2List(request):
     offset = (int(request.GET['pageSize'])*int(request.GET['pageIndex']))
-    orders = Order2.objects.order_by(request.GET['orderBy'])[offset: offset+int(request.GET['pageSize'])]
+    orders = Order2.objects.raw(
+        'select * from order_order2 order by '+ request.GET['orderBy'] + ' offset ' + str(offset) +
+        ' rows fetch first ' + request.GET['pageSize'] + ' rows only')
     size = Order2.objects.order_by(request.GET['orderBy']).count()
     return JsonResponse({'values': [serialize_order2(x) for x in orders], 'size': size}, status=200)
-
 
 @login_required
 @csrf_exempt

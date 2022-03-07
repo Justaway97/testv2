@@ -103,3 +103,23 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+class ReportTemplate(models.Model):
+    template_name = models.CharField(max_length=200)
+    template_type = models.CharField(max_length=200)
+    content = models.TextField()
+    variable = models.TextField(null=True)
+
+    def updateState(self, data):
+        if 'template_name' in data:
+            self.template_name = data['template_name']
+        if 'template_type' in data:
+            self.template_type = data['template_type']
+        if 'content' in data:
+            self.content = data['content']
+        if 'variable' in data:
+            self.variable = data['variable']
+        super().save()
+
+    def __str__(self):
+        return self.template_name + '-' + self.template_type

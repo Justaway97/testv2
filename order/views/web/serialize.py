@@ -22,3 +22,12 @@ def serialize_order_detail(order_detail):
         'status': order_detail.status,
     }
     return res
+
+def serialize_reportTemplate(report_template):
+    res = {
+        'template_name': report_template.template_name,
+        'template_type': report_template.template_type,
+        'content': report_template.content,
+        'variable': report_template.variable,
+    }
+    return res

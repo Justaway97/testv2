@@ -14,6 +14,9 @@
             <ng-container *ngIf="displayFilterButton">
               <ng-template [ngTemplateOutlet]="filter"></ng-template>
             </ng-container>
+            <ng-container *ngIf="displayGenerateButton">
+              <ng-template [ngTemplateOutlet]="generate"></ng-template>
+            </ng-container>
             <ng-container *ngIf="displayAddButton">
               <ng-template [ngTemplateOutlet]="addNew"></ng-template>
             </ng-container>
@@ -64,12 +67,6 @@
     </div>
   </ng-template>
 <!-- add item icon -->
-  <ng-template #userApproval >
-    <div>
-      <button mat-button color="white" (click)="goToUserApproval()">User Approval</button>
-    </div>
-  </ng-template>
-<!-- add item icon -->
   <ng-template #orderWarehouse >
     <div>
       <button mat-button color="white" (click)="goToOrderWarehouse()">Order</button>
@@ -85,6 +82,14 @@
   <ng-template #filter >
     <div>
       <button mat-button color="white" (click)="filterSearchCriteria()">Filter</button>
+    </div>
+  </ng-template>
+  <!-- generate icon -->
+  <ng-template #generate >
+    <div>
+      <button mat-button color="white" (click)="goToGenerate()">
+        <mat-icon>assignment</mat-icon>
+      </button>
     </div>
   </ng-template>
 </ng-container>
